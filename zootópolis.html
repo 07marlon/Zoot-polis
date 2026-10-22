@@ -1,0 +1,2350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111111">
+<title>Zootópolis | Niveles 1 y 2</title>
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box}html{min-height:100%}
+body{min-height:100vh;min-height:100dvh;width:100%;overflow-x:hidden;font-family:Arial,Helvetica,sans-serif;background-color:#171717;background-image:linear-gradient(rgba(0,0,0,.10),rgba(0,0,0,.20)),url("https://i.ibb.co/6ccTPZjS/muro.jpg");background-position:center;background-size:cover;background-repeat:no-repeat;background-attachment:fixed}
+img{display:block;max-width:100%;height:auto;user-select:none;-webkit-user-drag:none}
+.pantalla-niveles{width:100%;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:20px 20px 35px}
+.encabezado{width:100%;display:flex;justify-content:center;align-items:center;margin-bottom:35px}
+.logo{width:min(440px,75vw);height:auto;object-fit:contain;filter:drop-shadow(0 5px 8px #000a)}
+.lista-niveles{width:100%;max-width:1200px;display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:center;align-items:center;gap:clamp(5px,1.5vw,22px);margin:0 auto}
+.nivel{position:relative;flex:1 1 0;min-width:0;max-width:220px;display:flex;justify-content:center;align-items:center;text-decoration:none;cursor:pointer;outline-offset:4px;-webkit-tap-highlight-color:transparent;border-radius:12px}
+.nivel img{width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 5px 6px #0008);transition:transform .18s ease,filter .18s ease}
+@media(hover:hover){.nivel:not(.bloqueado):hover img{transform:scale(1.06);filter:drop-shadow(0 7px 10px #000c)}}
+.nivel:active img{transform:scale(.96)}.nivel:focus-visible{outline:3px solid white}
+.nivel.bloqueado{cursor:not-allowed}.nivel.bloqueado img{filter:grayscale(1) brightness(.48) drop-shadow(0 5px 6px #0008)}
+.candado{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#fff;font-weight:900;font-size:clamp(20px,4vw,42px);text-shadow:0 3px 7px #000;pointer-events:none}
+.candado small{font-size:clamp(9px,1.2vw,13px);letter-spacing:1px}
+.nivel:not(.bloqueado) .candado{display:none}
+.zona-volver{width:100%;display:flex;justify-content:center;align-items:center;margin-top:35px}
+.boton-volver{display:block;flex:0 0 auto;width:clamp(120px,16vw,190px);height:auto;border:none;padding:0;background:transparent;box-shadow:none;cursor:pointer;text-decoration:none;outline-offset:5px;transition:transform .18s ease}
+.boton-volver img{width:100%;height:auto;object-fit:contain}.boton-volver:hover{transform:scale(1.05)}.boton-volver:active{transform:scale(.96)}
+.estado-niveles{margin-top:20px;color:#fff;text-align:center;font-size:clamp(12px,2vw,15px);line-height:1.5;text-shadow:0 2px 5px #000;background:#111b;padding:10px 16px;border-radius:10px;max-width:600px}
+@media(max-width:768px){body{background-attachment:scroll}.pantalla-niveles{padding:18px 14px 28px}.encabezado{margin-bottom:28px}.logo{width:min(380px,78vw)}.lista-niveles{gap:8px}.nivel{max-width:none}.zona-volver{margin-top:30px}.boton-volver{width:clamp(115px,23vw,170px)}}
+@media(max-width:480px){.pantalla-niveles{padding:15px 8px 25px}.encabezado{margin-bottom:25px}.logo{width:min(330px,82vw)}.lista-niveles{width:100%;gap:4px}.nivel{flex:1 1 0;min-width:0}.nivel img{width:100%}.zona-volver{margin-top:26px}.boton-volver{width:clamp(105px,30vw,145px)}.candado{font-size:clamp(16px,5vw,25px)}.candado small{font-size:8px}}
+@media(max-height:500px) and (min-width:600px){.pantalla-niveles{padding-top:10px}.encabezado{margin-bottom:12px}.logo{width:240px}.lista-niveles{max-width:850px}.zona-volver{margin-top:15px}.boton-volver{width:110px}}
+
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #17232a;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px;
+}
+
+.topNavigation { width:min(100%,1000px); display:flex; justify-content:flex-start; margin:0 auto 10px; }
+.backToLobit { display:inline-flex; align-items:center; gap:8px; padding:10px 15px; border:1px solid #91e8ee; border-radius:999px; color:#eaffff; text-decoration:none; background:linear-gradient(135deg,#143d50,#1b6070); box-shadow:0 4px 14px #0005; font-size:13px; letter-spacing:.3px; }
+.backToLobit:hover { background:linear-gradient(135deg,#1b6070,#19889a); transform:translateY(-1px); }
+.backToLobit:focus-visible { outline:3px solid #ffdb69; outline-offset:3px; }
+
+h1 {
+    margin: 4px 0 10px;
+    color: #ffdb69;
+    text-shadow: 2px 3px #583c18;
+    letter-spacing: 2px;
+}
+
+#gamePanel {
+    width: min(100%, 1000px);
+    background: #243942;
+    border: 3px solid #567b78;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 8px 25px #0008;
+}
+
+#hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.hudItem {
+    background: #14272d;
+    padding: 8px 12px;
+    border-radius: 7px;
+}
+
+#gameWrap {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border: 3px solid #c6d8b8;
+    border-radius: 6px;
+    background: #7dbb67;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+#overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background: #102026d9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+#overlay h2 {
+    color: #ffdb69;
+    font-size: clamp(24px, 4vw, 40px);
+    margin: 0 0 12px;
+}
+
+#overlay p {
+    max-width: 500px;
+    line-height: 1.5;
+    font-size: clamp(14px, 2vw, 18px);
+}
+
+button {
+    border: 0;
+    border-radius: 9px;
+    background: #ffc83d;
+    color: #38280b;
+    padding: 12px 22px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #a77514;
+}
+
+button:hover {
+    background: #ffe17d;
+}
+
+button:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #a77514;
+}
+
+#instructions {
+    text-align: center;
+    color: #d9e9e4;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 10px 0 0;
+}
+
+#mobileControls {
+    display: grid;
+    grid-template-columns: repeat(3, 58px);
+    grid-template-rows: repeat(2, 48px);
+    gap: 7px;
+    justify-content: center;
+    margin: 14px auto 4px;
+}
+
+#mobileControls button {
+    padding: 0;
+    font-size: 23px;
+    touch-action: manipulation;
+    user-select: none;
+}
+
+#up { grid-column: 2; grid-row: 1; }
+#left { grid-column: 1; grid-row: 2; }
+#down { grid-column: 2; grid-row: 2; }
+#right { grid-column: 3; grid-row: 2; }
+
+@media (min-width: 800px) {
+    #mobileControls {
+        display: none;
+    }
+}
+
+
+/* Sala veterinaria futurista: no dibuja piso para permitir colocar una imagen de fondo */
+#hospitalRoom {
+    display: none;
+    position: relative;
+    width: min(100%, 1100px);
+    min-height: min(78vh, 720px);
+    overflow: hidden;
+    isolation: isolate;
+    border: 2px solid #66e8f2;
+    border-radius: 18px;
+    color: #eefcff;
+    background: radial-gradient(ellipse at 50% 25%, #1d5269 0%, #102b40 48%, #081722 100%);
+    box-shadow: 0 0 28px #29d9f566, inset 0 0 45px #24d6f522;
+}
+#hospitalRoom::before {
+    content: "";
+    position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: linear-gradient(90deg, transparent 0 7%, #53eaff20 7.2%, transparent 7.5% 92.5%, #53eaff20 92.8%, transparent 93%),
+                linear-gradient(180deg, #77f4ff16, transparent 35%, #06121a55);
+}
+.roomHeader {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 18px 22px; border-bottom: 1px solid #67e7f566;
+    background: #06172399; backdrop-filter: blur(8px);
+}
+.roomBrand { font-weight: 900; letter-spacing: 2px; color: #8cf6ff; }
+.roomStatus { color: #b9f7dc; font-size: 13px; text-align: right; }
+.roomContent { position: relative; min-height: 500px; padding: 26px clamp(14px, 4vw, 42px) 28px; }
+.roomTitle { margin: 0 0 8px; color: #f5fdff; text-align: center; font-size: clamp(22px, 3.4vw, 34px); text-shadow: 0 0 18px #43dfffa6; }
+.roomSubtitle { margin: 0 auto 22px; max-width: 620px; text-align: center; color: #bce5ef; line-height: 1.5; }
+.roomScene {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(180px, 1fr) minmax(0, 1fr);
+    align-items: center; gap: clamp(8px, 2vw, 22px); max-width: 850px; margin: 0 auto 24px;
+}
+.medicalPanel, .carePod, .doorPanel {
+    border: 1px solid #67e8f288; border-radius: 14px; background: #0a2435cc;
+    box-shadow: 0 0 20px #27d9ed20, inset 0 0 18px #6deeff0d;
+}
+.medicalPanel { padding: 15px 12px; min-height: 170px; }
+.medicalPanel h3 { margin: 0 0 12px; color: #85f4ff; font-size: 14px; letter-spacing: 1px; }
+.monitor { height: 74px; border: 2px solid #4edce8; border-radius: 8px; background: #06131f; display: grid; place-items: center; overflow: hidden; }
+.monitor svg { width: 100%; height: 100%; }
+.panelLine { height: 5px; border-radius: 5px; background: #2c7183; margin-top: 9px; }
+.panelLine:nth-of-type(2) { width: 72%; }
+.carePod { min-height: 220px; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+.carePod::before { content: ""; position: absolute; inset: 8px; border: 1px solid #8af7ff3d; border-radius: 10px; pointer-events: none; }
+.doctorRoomImage { width: min(100%, 145px); height: 155px; object-fit: contain; filter: drop-shadow(0 0 12px #5deeff55); }
+.dogRoomImage { width: 92px; height: 68px; object-fit: contain; margin-top: -12px; filter: drop-shadow(0 0 10px #5deeff55); }
+.careLabel { color: #9af8ff; font-weight: bold; font-size: 12px; text-align: center; margin-top: 6px; }
+.doorPanel { max-width: 360px; margin: 0 auto; padding: 14px; text-align: center; }
+.levelDoor {
+    width: 100%; min-height: 58px; padding: 14px 18px; color: #eaffff;
+    background: linear-gradient(135deg, #087f9b, #1557a2); border: 1px solid #79f4ff;
+    box-shadow: 0 0 18px #1bd9ee66, inset 0 0 15px #9cfaff24; text-shadow: 0 1px 2px #002;
+    letter-spacing: 1px;
+}
+.levelDoor:hover { background: linear-gradient(135deg, #0babc2, #2475cb); }
+.doorHint { color: #b6dce6; font-size: 12px; margin: 10px 0 0; }
+
+.procedurePanel { max-width: 850px; margin: 0 auto 22px; padding: clamp(14px, 3vw, 22px); border: 1px solid #67e8f288; border-radius: 14px; background: #071c2be8; box-shadow: 0 0 22px #27d9ed18; }
+.procedureTop { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
+.procedureTop h3 { margin:0 0 6px; color:#9af8ff; font-size:clamp(16px,2.5vw,21px); }
+.procedureTop p { margin:0; color:#b9dce7; font-size:13px; line-height:1.45; }
+.procedureProgress { flex-shrink:0; border:1px solid #4edce8; border-radius:20px; padding:8px 12px; color:#eaffff; font-weight:800; background:#0b3546; box-shadow:inset 0 0 12px #38d8f322; }
+.procedureProgressTrack { height:9px; width:100%; overflow:hidden; border-radius:99px; background:#03121c; border:1px solid #275769; margin:0 0 15px; }
+.procedureProgressFill { height:100%; width:0%; border-radius:inherit; background:linear-gradient(90deg,#22d3ee,#4ade80); box-shadow:0 0 14px #36f4b477; transition:width .55s cubic-bezier(.2,.8,.2,1); }
+.procedureStep { transition:border-color .25s ease, background .25s ease, transform .25s ease, box-shadow .25s ease; }
+.procedureStep.activeStep { border-color:#62e8ff; background:linear-gradient(100deg,#103b50,#0d2c40); box-shadow:0 0 0 1px #62e8ff30,0 0 20px #1fc9ee20; transform:translateX(3px); }
+.procedureStep.activeStep .stepCheck { border-color:#65edff; color:#8af6ff; box-shadow:0 0 13px #28d9f455; }
+.procedureStep.completed { animation:stepValidated .45s ease both; }
+.procedureStep.completed .stepCheck { animation:checkPop .38s cubic-bezier(.2,.9,.3,1.4) both; }
+.procedureStep.completed .stepAction { background:linear-gradient(135deg,#15803d,#22c55e); color:#fff; box-shadow:0 3px 0 #14532d; }
+.procedureMessage { transition:background .25s ease, color .25s ease; }
+.procedureMessage.successFlash { animation:messageFlash .6s ease; }
+@keyframes stepValidated { 0%{transform:scale(.985);box-shadow:0 0 0 #22c55e00} 55%{transform:scale(1.012);box-shadow:0 0 22px #22c55e35} 100%{transform:scale(1);box-shadow:0 0 0 #22c55e00} }
+@keyframes checkPop { 0%{transform:scale(.55) rotate(-25deg)} 70%{transform:scale(1.18) rotate(8deg)} 100%{transform:scale(1) rotate(0)} }
+@keyframes messageFlash { 0%{background:#1b6b56;color:#fff;transform:scale(1.01)} 100%{background:#123b46;color:#a8f7ff;transform:scale(1)} }
+@media(prefers-reduced-motion:reduce){.procedureStep,.procedureProgressFill,.procedureMessage,.procedureStep.completed .stepCheck{animation:none!important;transition:none!important}}
+.procedureSteps { list-style:none; display:grid; gap:8px; padding:0; margin:0; }
+.procedureStep { display:grid; grid-template-columns:28px minmax(0,1fr) auto; align-items:center; gap:10px; padding:11px; border-radius:10px; border:1px solid #2d6578; background:#0b2a3b; }
+.procedureStep strong { display:block; color:#effcff; font-size:14px; }
+.procedureStep small { display:block; color:#a9d2df; margin-top:4px; line-height:1.35; }
+.stepCheck { display:grid; place-items:center; width:25px; height:25px; border-radius:50%; border:1px solid #6296a4; color:#b9dce7; font-weight:900; }
+.procedureStep.completed { border-color:#28d879; background:#082d27; }
+.procedureStep.completed .stepCheck { background:#16a34a; border-color:#6bff9c; color:white; box-shadow:0 0 12px #22c55e66; }
+.procedureStep.completed .stepCheck::after { content:"✓"; }
+.procedureStep.completed .stepCheck { font-size:0; }
+.procedureStep.completed .stepCheck::after { font-size:16px; }
+.procedureStep.lockedStep { opacity:.58; }
+.stepAction { padding:9px 12px; font-size:12px; box-shadow:none; border-radius:8px; white-space:nowrap; }
+.stepAction:disabled, .levelDoor:disabled { cursor:not-allowed; opacity:.48; filter:grayscale(.45); }
+.procedureMessage { margin:13px 0 0; padding:10px 12px; border-radius:8px; background:#123b46; color:#a8f7ff; text-align:center; font-weight:700; line-height:1.4; }
+.ecgTrace { stroke-dasharray:220; stroke-dashoffset:220; animation: ecgDraw 1.8s linear infinite; }
+@keyframes ecgDraw { to { stroke-dashoffset:0; } }
+.vitalValues { display:flex; justify-content:space-around; gap:6px; margin-top:8px; color:#8af6d8; font-size:12px; font-weight:700; }
+.vitalValues span { white-space:nowrap; }
+@media (max-width: 520px) { .procedureTop { align-items:flex-start; } .procedureStep { grid-template-columns:25px minmax(0,1fr); } .stepAction { grid-column:2; justify-self:start; } .procedureProgress { font-size:12px; padding:6px 9px; } }
+
+@media (max-width: 620px) {
+    body { padding: 8px; }
+    #hospitalRoom { min-height: 78vh; }
+    .roomHeader { padding: 13px; }
+    .roomContent { padding: 20px 10px; }
+    .roomScene { grid-template-columns: 1fr 1fr; }
+    .carePod { grid-column: 1 / -1; grid-row: 1; min-height: 190px; }
+    .doctorRoomImage { height: 120px; }
+    .medicalPanel { min-height: 145px; }
+}
+
+
+/* Integración: el Lobit es la primera pantalla y el juego aparece al elegir Nivel 1. */
+#lobitScreen{position:fixed;inset:0;z-index:10000;display:flex;overflow-y:auto;overflow-x:hidden;background-color:#171717;background-image:linear-gradient(rgba(0,0,0,.10),rgba(0,0,0,.20)),url("https://i.ibb.co/6ccTPZjS/muro.jpg");background-position:center;background-size:cover;background-repeat:no-repeat;background-attachment:fixed}
+#lobitScreen .pantalla-niveles{margin:auto}
+#level1Screen{display:none;width:100%;min-height:100vh;}
+#level1Screen .backToLobit{cursor:pointer}
+@media(max-width:768px){#lobitScreen{background-attachment:scroll}}
+
+/* Escena visual de procedimiento: cada validación cambia lo que se ve en la pata. */
+.treatmentVisual{max-width:850px;margin:0 auto 22px;border:1px solid #67e8f288;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#071a29f5,#10384af2);box-shadow:0 12px 34px #0004,inset 0 0 28px #36dff00c}
+.treatmentVisualHeader{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;background:#04131fd9;border-bottom:1px solid #67e8f544}
+.treatmentVisualHeader strong{color:#a4f6ff;letter-spacing:.8px;font-size:14px}
+.liveBadge{display:inline-flex;align-items:center;gap:7px;color:#9df5c4;font-size:11px;font-weight:900;letter-spacing:1px}
+.liveBadge:before{content:"";width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 12px #4ade80;animation:livePulse 1.5s infinite}
+.treatmentVisualBody{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(220px,.9fr);gap:18px;padding:18px;align-items:center}
+.legStage{position:relative;min-height:235px;border:1px solid #55d6e54d;border-radius:14px;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 50% 45%,#1e6176 0%,#0b2a3d 64%,#061622 100%)}
+.legStage:before,.legStage:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(transparent 49%,#73eaff0b 50%,transparent 51%),linear-gradient(90deg,transparent 49%,#73eaff0b 50%,transparent 51%);background-size:24px 24px}
+.legSvg{position:relative;z-index:1;width:min(100%,360px);height:220px;overflow:visible;filter:drop-shadow(0 9px 12px #0005)}
+.legSkin{fill:#d7a77f;stroke:#f8d1ad;stroke-width:2}.pawPad{fill:#bb8065;stroke:#f4c2a1;stroke-width:1.5}.wound{opacity:0;transition:opacity .4s}.cleanGlow{opacity:0;fill:#70f7ee33;stroke:#75fff0;stroke-dasharray:4 4}.needleTool{opacity:0;transform:translate(0,-35px) rotate(-18deg);transform-origin:180px 100px}.splintLeft,.splintRight{opacity:0;transition:opacity .45s}.medicineDrop{opacity:0}.gauzeWrap{opacity:0;stroke-dasharray:250;stroke-dashoffset:250;transition:opacity .3s}.legStage[data-step="1"] .wound{opacity:1}.legStage[data-step="2"] .wound{opacity:.45}.legStage[data-step="2"] .cleanGlow{opacity:1}.legStage[data-step="3"] .needleTool{opacity:1;animation:injectMove 1.25s ease-in-out 2}.legStage[data-step="4"] .splintLeft,.legStage[data-step="4"] .splintRight{opacity:1}.legStage[data-step="5"] .medicineDrop{opacity:1;animation:dropMedicine .9s ease-in-out 2}.legStage[data-step="6"] .gauzeWrap{opacity:1;stroke-dashoffset:0;animation:wrapReveal 1.1s ease-out both}
+.legStage[data-step="6"] .wound{opacity:0}.legStage[data-step="6"] .cleanGlow{opacity:.45}
+.visualSide{display:flex;flex-direction:column;gap:11px}.visualStepNumber{color:#67e8f9;text-transform:uppercase;letter-spacing:1.5px;font-size:10px;font-weight:900}.visualStepTitle{font-size:clamp(18px,2.4vw,24px);line-height:1.2;color:#f2fdff;font-weight:900}.visualStepDesc{font-size:13px;line-height:1.6;color:#b8dce7}.visualChecklist{display:flex;flex-direction:column;gap:7px;margin-top:3px}.visualCheckItem{display:flex;align-items:center;gap:8px;color:#8eb8c7;font-size:12px;transition:color .25s}.visualCheckItem span{width:19px;height:19px;border:1px solid #3d7180;border-radius:50%;display:grid;place-items:center;font-size:11px}.visualCheckItem.done{color:#a8f7c5}.visualCheckItem.done span{background:#15803d;border-color:#4ade80;color:white;box-shadow:0 0 12px #22c55e35}
+.instrumentLabel{position:absolute;z-index:3;bottom:10px;left:10px;right:10px;text-align:center;color:#a5f3fc;font-size:10px;letter-spacing:1.2px;font-weight:900;text-shadow:0 2px 4px #000}
+@keyframes injectMove{0%,100%{transform:translate(0,-35px) rotate(-18deg)}45%,65%{transform:translate(-8px,3px) rotate(-18deg)}}
+@keyframes dropMedicine{0%{transform:translateY(-8px);opacity:0}40%{opacity:1}100%{transform:translateY(18px);opacity:.9}}
+@keyframes wrapReveal{from{stroke-dashoffset:250;opacity:.25}to{stroke-dashoffset:0;opacity:1}}
+@keyframes livePulse{50%{opacity:.35;transform:scale(.8)}}
+@media(max-width:620px){.treatmentVisualBody{grid-template-columns:1fr;padding:12px;gap:12px}.legStage{min-height:200px}.legSvg{height:190px}.treatmentVisualHeader{padding:12px}.visualSide{padding:3px 3px 7px}}
+@media(prefers-reduced-motion:reduce){.legStage *,.liveBadge:before{animation:none!important;transition:none!important}}
+
+
+/* Marco visual inspirado en la ilustración de Zootópolis: madera cálida, hojas y dorado. No altera imágenes existentes. */
+#gamePanel,.roomContent,.procedurePanel,.doorPanel{border:5px solid #7a4a25!important;border-radius:22px!important;box-shadow:inset 0 0 0 3px #e9bd69,0 8px 0 #3d632f,0 15px 28px #0008!important;position:relative}
+#gamePanel{background:linear-gradient(145deg,#315c3a,#1e3d2b)!important;padding:14px!important}
+#gameWrap{border:4px solid #dba85b!important;border-radius:13px!important;box-shadow:inset 0 0 0 2px #fff2}
+.hudItem,.procedureStep,.medicalPanel,.visualPanel,.carePod{border-radius:12px}
+.roomHeader{border-bottom:3px solid #dba85b}
+.roomTitle,h1{color:#ffe08a!important;text-shadow:2px 3px 0 #653719,0 0 12px #0008!important}
+.backToLobit{border:2px solid #e8bf70!important;background:linear-gradient(135deg,#704321,#397442)!important;color:#fff8d8!important;border-radius:14px!important}
+#hospitalRoom{border:7px solid #754421!important;border-radius:26px!important;box-shadow:inset 0 0 0 4px #e9bd69,0 14px 35px #0009!important}
+@media(max-width:600px){#gamePanel,#hospitalRoom{border-width:4px!important;border-radius:16px!important}}
+
+
+/* Nivel 2: el reto de memoria sustituye la lista manual y su barra de progreso. */
+#procedureSteps,.procedureProgressTrack,.procedureProgress,#procedureMessage,.visualChecklist{display:none!important}
+#procedureTitle + p{display:none!important}
+.levelDoor{background:linear-gradient(135deg,#8b5b2b,#d5a64c)!important;color:#fff7d5!important;border:3px solid #f4d48a!important;border-radius:15px!important;padding:14px 22px!important;font-weight:900!important;cursor:pointer}
+.levelDoor:disabled{opacity:.7;cursor:not-allowed}
+#level3Screen{display:none;min-height:100vh;padding:28px;box-sizing:border-box;background:linear-gradient(135deg,#214b2e,#9cc96c);color:#fff8dc;text-align:center}
+#level3Screen .level3Card{max-width:760px;margin:8vh auto;padding:36px 24px;border:6px solid #704522;border-radius:28px;background:linear-gradient(145deg,#37633d,#1d3928);box-shadow:inset 0 0 0 4px #e9bd69,0 15px 30px #0007}
+#level3Screen button{border:2px solid #f0ce82;border-radius:14px;padding:12px 20px;background:linear-gradient(135deg,#754421,#397442);color:#fff8dc;font-weight:900;cursor:pointer}
+
+/* Nivel 3: laberinto sin textura de suelo; conserva el marco madera y dorado. */
+#level3Screen{display:none;min-height:100vh;padding:clamp(12px,3vw,28px);box-sizing:border-box;background:linear-gradient(135deg,#214b2e,#9cc96c);color:#fff8dc;text-align:center}
+.mazeHeader{max-width:1040px;margin:0 auto 14px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.mazeHeader h1{margin:0 0 6px;font-size:clamp(21px,3vw,34px);text-shadow:2px 3px #4c321c}.mazeHeader p{margin:0}.mazeHeader button,.mazeOverlay button,.mazeControls button,#level4Screen button{border:3px solid #f0ce82;border-radius:14px;padding:11px 16px;background:linear-gradient(135deg,#754421,#397442);color:#fff8dc;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #4a2b18}
+.mazeHud{max-width:960px;margin:0 auto 10px;display:flex;justify-content:space-around;align-items:center;gap:10px;flex-wrap:wrap;background:#193d2b;border:4px solid #704522;box-shadow:inset 0 0 0 2px #e9bd69;border-radius:14px;padding:10px;font-weight:800}.mazeHud .supplyCount{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;background:#ffffff12;border:1px solid #ffffff2b;border-radius:9px;padding:5px 8px}.mazeHud .supplyCount img{width:25px;height:25px;object-fit:contain;filter:drop-shadow(0 2px 2px #0007)}.mazeHud .supplyCount strong{font-variant-numeric:tabular-nums}.treatmentCard{width:min(680px,100%);max-height:90%;overflow:auto;background:linear-gradient(145deg,#f7fff1,#dcefcf);color:#24472b;border:5px solid #d6ac55;border-radius:22px;padding:clamp(16px,3vw,28px);box-sizing:border-box;box-shadow:0 16px 40px #0008}.treatmentCard h2{margin:4px 0 8px;color:#22613a;font-size:clamp(23px,4vw,34px)}.recoveredRabbit{width:clamp(105px,22vw,160px);height:clamp(105px,22vw,160px);object-fit:contain;display:block;margin:8px auto}.treatmentSteps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}.treatmentStep{background:#fff;border:1px solid #c6d9b8;border-radius:14px;padding:12px 8px;font-size:13px;line-height:1.4}.treatmentStep img{width:48px;height:48px;object-fit:contain;display:block;margin:0 auto 6px}.treatmentStep strong{display:block;margin-bottom:4px}.treatmentComplete{background:#28623a;color:#fff;border-radius:12px;padding:10px;font-weight:800}@media(max-width:560px){.treatmentSteps{grid-template-columns:1fr}.treatmentStep{display:grid;grid-template-columns:48px 1fr;column-gap:10px;align-items:center;text-align:left}.treatmentStep img{grid-row:span 2;margin:0}.treatmentStep strong{margin:0}}.mazeWrap{position:relative;max-width:960px;margin:auto;border:7px solid #754421;border-radius:22px;box-shadow:inset 0 0 0 4px #e9bd69,0 12px 28px #0008;overflow:hidden;background:#294b30}.mazeWrap canvas{display:block;width:100%;height:auto;background:#294b30;touch-action:none}.mazeOverlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;background:#10251be8;text-align:center}.mazeOverlay h2{font-size:clamp(22px,4vw,38px);margin:0 0 8px}.mazeOverlay p{max-width:560px;line-height:1.5}.mazeOverlay.hidden{display:none}.mazeControls{display:none;margin:14px auto;max-width:300px;align-items:center;justify-content:center;gap:8px}.mazeControls>div{display:flex;gap:8px}.mazeControls button{min-width:52px;min-height:48px}.mazeInstructions{font-size:14px}.mazeHeader button:hover,.mazeOverlay button:hover,.mazeControls button:hover{filter:brightness(1.12);transform:translateY(-1px)}
+/* Presentación cinematográfica de la misión con los recursos originales del juego. */
+.missionOverlay{z-index:5;overflow-y:auto;justify-content:center;background:radial-gradient(ellipse at 50% 0%,#3d7958ee 0%,#10251bf5 70%);backdrop-filter:blur(5px);padding:clamp(10px,2vw,24px)}
+.missionCard{width:min(100%,690px);box-sizing:border-box;padding:clamp(16px,2.8vw,28px);border:2px solid #f0ce82;border-radius:24px;background:linear-gradient(145deg,#1c4934f7,#10291ff7);box-shadow:inset 0 0 0 5px #e9bd6918,0 18px 50px #0008;animation:missionArrive .65s cubic-bezier(.2,.8,.2,1) both}
+.missionEyebrow{display:flex;align-items:center;justify-content:center;gap:9px;color:#f5d68d;font-size:11px;font-weight:950;letter-spacing:2px;margin-bottom:9px}
+.missionPulse{width:8px;height:8px;border-radius:50%;background:#8ff0a5;box-shadow:0 0 0 5px #8ff0a51c;animation:missionPulse 1.7s infinite}
+.missionCard h2{font-size:clamp(24px,4vw,38px)!important;line-height:1.08;color:#fff4c9;margin:0 0 10px!important;text-shadow:0 3px 0 #57391f,0 0 18px #e9bd6928}
+.missionLead{max-width:530px!important;margin:0 auto 16px!important;color:#e0f0df;font-size:clamp(13px,1.8vw,16px);line-height:1.5}
+.missionCharacters{display:grid;grid-template-columns:1fr 40px 1fr;align-items:center;gap:10px;max-width:470px;margin:0 auto 16px}
+.missionCharacter{min-width:0;display:flex;flex-direction:column;align-items:center;gap:7px;color:#f5d68d;font-size:11px;font-weight:850}
+.missionImageFrame{height:clamp(100px,16vw,150px);width:min(100%,175px);display:grid;place-items:center;overflow:hidden;border-radius:18px;border:2px solid #e9bd69;background:radial-gradient(ellipse at 50% 40%,#f7e6ad,#c7dba0 72%,#78965b);box-shadow:0 7px 0 #091b13,0 10px 20px #0003;animation:missionFloat 3.4s ease-in-out infinite}
+.missionImageFrame img{display:block;width:100%;height:100%;min-width:1px;min-height:1px;object-fit:contain;object-position:center;visibility:visible;opacity:1;filter:drop-shadow(0 5px 4px #1a281e33)}.missionImageFrame img:not([src]){visibility:hidden}.doctorFrame img,.rabbitFrame img{max-width:100%;max-height:100%}.dogFrame img{transform:scale(1.08)}.missionArrow{font-size:30px;color:#f5d68d;text-shadow:0 3px #55371e;animation:missionArrow 1.4s ease-in-out infinite}
+.missionObjectives{display:grid;grid-template-columns:1fr;gap:7px;text-align:left;max-width:520px;margin:0 auto 17px}
+.missionObjectives>div{display:flex;align-items:center;gap:11px;padding:8px 11px;border:1px solid #d5e9c52b;border-radius:12px;background:#ffffff08}
+.missionObjectives span{flex:0 0 27px;height:27px;display:grid;place-items:center;border-radius:9px;background:#e9bd69;color:#24412d;font-size:11px;font-weight:950}
+.missionObjectives p{margin:0!important;color:#f3f6e7;font-size:12px;line-height:1.35}
+.missionCard #mazeStartButton{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:min(100%,260px);padding:14px 24px;border:2px solid #ffe7a2;border-radius:15px;background:linear-gradient(135deg,#f0ca70,#dca33d);color:#24412d;font-size:14px;font-weight:1000;letter-spacing:.6px;box-shadow:0 5px 0 #79502a,0 9px 20px #0003;transition:transform .2s,filter .2s}
+.missionCard #mazeStartButton:hover{transform:translateY(-2px);filter:brightness(1.07)}.missionHint{display:block;margin-top:12px;color:#c2d9bf;font-size:10px;letter-spacing:.3px}
+@keyframes missionArrive{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes missionFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}@keyframes missionPulse{50%{opacity:.45;box-shadow:0 0 0 8px #8ff0a508}}@keyframes missionArrow{50%{transform:translateX(4px)}}
+@media(max-width:650px){.missionOverlay{padding:9px}.missionCard{padding:15px 12px;border-radius:18px}.missionCharacters{grid-template-columns:1fr 24px 1fr;gap:5px;margin-bottom:12px}.missionImageFrame{height:100px;width:100%;max-width:145px;border-radius:13px}.missionCharacter{font-size:10px}.missionArrow{font-size:23px}.missionObjectives{gap:5px;margin-bottom:13px}.missionObjectives>div{padding:7px 8px}.missionObjectives p{font-size:11px}.missionCard #mazeStartButton{padding:12px 16px}.missionHint{font-size:9px}}
+@media(max-width:650px){.mazeControls{display:flex}.mazeWrap{border-width:4px;border-radius:14px}.mazeHud{font-size:13px}.mazeHeader{justify-content:center}}
+
+
+/* Nivel 4: alimentación de la nutria con las imágenes originales del usuario. */
+#level4Screen{display:none;min-height:100vh;padding:clamp(12px,3vw,28px);box-sizing:border-box;background:radial-gradient(ellipse at 50% 0%,#b5e9cf 0%,#4a9b89 38%,#173f42 100%);color:#f7fff0;text-align:center}
+.otterHeader{max-width:1040px;margin:0 auto 14px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;text-align:left}.otterHeader h1{margin:3px 0 7px;font-size:clamp(22px,3.5vw,36px);text-shadow:0 3px #17464a}.otterHeader p{margin:0;max-width:720px;line-height:1.45}.otterKicker{font-size:11px;letter-spacing:2px;font-weight:950;color:#ffe19b}.otterHeader button,.otterControls button,.otterMissionCard button{border:2px solid #ffdf91;border-radius:14px;padding:12px 18px;background:linear-gradient(135deg,#155d58,#218c75);color:#fff;font-weight:950;cursor:pointer;box-shadow:0 4px 0 #103c3d}.otterHud{max-width:960px;margin:0 auto 10px;display:grid;grid-template-columns:1fr 1fr auto auto;align-items:center;gap:12px;padding:12px;background:#123e40;border:3px solid #e7c879;border-radius:16px;box-shadow:0 8px 18px #062b2a55}.otterMeter{min-width:0;text-align:left}.otterMeterLabel{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:900;margin-bottom:6px}.otterTrack{height:13px;background:#061f24;border:1px solid #b9d7c4;border-radius:99px;overflow:hidden}.otterFill{height:100%;width:0%;border-radius:99px;transition:width .25s ease}.energyFill{background:linear-gradient(90deg,#ffb94b,#ffed8a)}.trustFill{background:linear-gradient(90deg,#54d889,#c2ffb5)}.otterStat{display:flex;flex-direction:column;gap:4px;white-space:nowrap;font-size:12px;color:#d3eee2}.otterStat strong{font-size:17px;color:#fff5c9}.otterGameWrap{position:relative;width:min(100%,960px);margin:0 auto;overflow:hidden;border:6px solid #704522;border-radius:22px;box-shadow:inset 0 0 0 3px #f0d17e,0 14px 30px #062b2a66;background:#267c80}.otterGameWrap canvas{display:block;width:100%;height:auto;touch-action:manipulation;cursor:crosshair}.otterOverlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:clamp(10px,2vw,22px);background:#092b2bba;backdrop-filter:blur(4px);overflow:auto}.otterOverlay.hidden{display:none}.otterMissionCard{width:min(100%,590px);padding:clamp(16px,3vw,28px);box-sizing:border-box;background:linear-gradient(145deg,#f6fff0,#ccebd5);color:#19484a;border:4px solid #e6c574;border-radius:24px;box-shadow:0 15px 45px #062b2a77}.otterMissionCard h2{font-size:clamp(22px,4vw,34px);margin:8px 0;color:#14575a}.otterMissionCard p{line-height:1.5;font-size:14px}.otterBadge{display:inline-block;border-radius:99px;background:#d7f0d8;padding:6px 12px;font-size:11px;letter-spacing:1.5px;font-weight:950}.otterIntroImages{display:flex;align-items:center;justify-content:center;gap:14px;margin:14px auto}.otterIntroImages img{width:clamp(110px,22vw,175px);height:clamp(135px,25vw,180px);object-fit:contain;filter:drop-shadow(0 5px 5px #18484a25)}.otterStoryText{background:#e4f1df;border-left:4px solid #b18b4d;padding:10px 12px;border-radius:8px;text-align:left}.otterMissionCard .otterStoryArt{display:flex;justify-content:center;align-items:center;margin:4px auto 8px}.otterIntroImages span{font-size:30px;color:#c28c31}.otterMissionCard button{background:linear-gradient(135deg,#eac96d,#dca947);color:#244b43;box-shadow:0 4px 0 #9a6b2b;margin:5px 0 8px}.otterMissionCard small{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;font-size:11px;line-height:1.5;color:#3d6965;white-space:normal;overflow-wrap:break-word;word-wrap:break-word;hyphens:auto;text-align:center}.otterMissionCard,.otterMissionCard p,.otterStoryText{min-width:0;max-width:100%;box-sizing:border-box;overflow-wrap:break-word;word-wrap:break-word}.otterMissionCard p{white-space:normal}.otterControls{display:flex;justify-content:center;margin:12px auto}.otterControls button{min-width:190px;background:linear-gradient(135deg,#eac96d,#dca947);color:#244b43;box-shadow:0 4px 0 #9a6b2b}.otterInstructions{max-width:960px;margin:8px auto 0;font-size:13px;line-height:1.5;color:#e6fff0}@media(max-width:650px){.otterHeader{text-align:center;justify-content:center}.otterHud{grid-template-columns:1fr 1fr;gap:10px;padding:9px}.otterStat{align-items:center}.otterGameWrap{border-width:4px;border-radius:14px}.otterMissionCard{border-radius:17px}.otterInstructions{font-size:12px}}
+
+
+/* Nivel 5: liberación de pacientes y regreso a sus hábitats. */
+#level5Screen{display:none;min-height:100vh;padding:clamp(10px,2.5vw,25px);box-sizing:border-box;background:radial-gradient(ellipse at top,#e2f5ff,#8bc3cf 55%,#2b5965);color:#f7fff5;text-align:center}
+.rescue5Header{max-width:1040px;margin:0 auto 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;text-align:left}.rescue5Header h1{margin:4px 0;font-size:clamp(22px,3.5vw,36px);text-shadow:0 3px #224b55}.rescue5Header p{margin:0;line-height:1.45;max-width:720px}.rescue5Header button,.rescue5Overlay button{border:2px solid #f4d58c;border-radius:13px;padding:11px 16px;background:linear-gradient(135deg,#1a6673,#258d79);color:#fff;font-weight:950;cursor:pointer;box-shadow:0 4px 0 #194651}.rescue5Hud{max-width:960px;margin:0 auto 10px;display:grid;grid-template-columns:1fr 1fr auto auto;gap:10px;align-items:center;background:#173e49;border:3px solid #e8c875;border-radius:15px;padding:10px 13px;box-shadow:0 8px 18px #17313b44}.rescue5Stat{display:flex;flex-direction:column;gap:3px;font-size:12px;color:#d9f1ee;white-space:nowrap}.rescue5Stat strong{font-size:17px;color:#fff2be}.rescue5BossHealth{grid-column:1/-1;min-width:0;text-align:left;padding-top:5px}.rescue5BossHealth>div:first-child{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#fff1c2;font-size:12px;margin-bottom:6px}.rescue5BossTrack{height:16px;border:2px solid #f1d18b;border-radius:99px;background:#311c27;overflow:hidden;box-shadow:inset 0 2px 4px #0008}.rescue5BossTrack>div{height:100%;width:100%;border-radius:99px;background:linear-gradient(90deg,#b91636,#ff4b51,#ffb15d);box-shadow:0 0 12px #ff343b99;transition:width .12s linear}.rescue5BossHealth.low .rescue5BossTrack>div{background:linear-gradient(90deg,#6d091c,#e52235)}.rescue5GameWrap{position:relative;width:min(100%,960px);margin:auto;overflow:hidden;border:5px solid #704522;border-radius:18px;box-shadow:inset 0 0 0 3px #f0d17e,0 14px 28px #12313c66;background:#b4d6bd}.rescue5GameWrap canvas{display:block;width:100%;height:auto;touch-action:none}.rescue5Overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:clamp(8px,2vw,20px);box-sizing:border-box;background:#0c2a35bd;backdrop-filter:blur(4px);overflow:auto}.rescue5Overlay.hidden{display:none}.rescue5Card{width:min(100%,600px);box-sizing:border-box;padding:clamp(14px,2.5vw,24px);border:4px solid #e7c776;border-radius:22px;background:linear-gradient(145deg,#f6fff6,#d3eee0);color:#234d4a;box-shadow:0 15px 40px #061b2580}.rescue5Card h2{font-size:clamp(21px,3.5vw,31px);margin:8px 0;color:#175968}.rescue5Card p{font-size:13px;line-height:1.5;margin:10px 0}.rescue5Animals{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}.rescue5Animals img{width:100%;height:clamp(65px,12vw,95px);object-fit:contain}.rescue5Animals span{display:block;font-size:10px;font-weight:900}.rescue5Card button{margin:7px 0 3px;background:linear-gradient(135deg,#efcf76,#dca849);color:#254c43;box-shadow:0 4px 0 #98692c}.rescue5Instructions{max-width:960px;margin:9px auto 0;color:#f0fffb;font-size:12px;line-height:1.5}.rescue5Touch{display:none;justify-content:center;gap:12px;margin:10px auto}.rescue5Touch button{min-width:56px;min-height:45px;border:2px solid #f2d58e;border-radius:12px;background:#205b67;color:#fff;font-size:20px;font-weight:900}.rescue5Touch .action5{font-size:12px;padding:0 13px}
+@media(max-width:650px){.rescue5Header{justify-content:center;text-align:center}.rescue5Hud{grid-template-columns:1fr 1fr;gap:8px;padding:8px}.rescue5Stat{align-items:center}.rescue5GameWrap{border-width:3px;border-radius:12px}.rescue5Touch{display:flex}.rescue5Instructions{font-size:11px}.rescue5Card{border-radius:16px}.rescue5Animals{gap:4px}}
+
+</style>
+<style id="presentationStyles">
+    /* ==================================
+       CONFIGURACIÓN GENERAL
+    ================================== */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ==================================
+       PANTALLA PRINCIPAL
+    ================================== */
+
+    .pantalla-inicio {
+      position: relative;
+      isolation: isolate;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      background: #000;
+    }
+
+    /* ==================================
+       FONDO
+    ================================== */
+
+    .fondo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: -1;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* ==================================
+       PERSONAJES
+    ================================== */
+
+    .personajes {
+      position: absolute;
+      left: clamp(0px, 2.5vw, 36px);
+      bottom: 0;
+
+      width: clamp(230px, 39vw, 540px);
+      height: 57%;
+
+      display: flex;
+      align-items: flex-end;
+
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .personaje {
+      position: relative;
+      height: 100%;
+      flex-shrink: 0;
+    }
+
+    /* DOCTOR */
+
+    .doctor {
+      width: 62%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    /* PERRITO */
+
+    .perrito {
+      width: 48%;
+      height: 68%;
+      margin-left: -9%;
+      z-index: 3;
+    }
+
+    /* IMÁGENES SUPERPUESTAS */
+
+    .personaje img {
+      position: absolute;
+      inset: 0;
+
+      display: block;
+      width: 100%;
+      height: 100%;
+
+      object-fit: contain;
+      object-position: bottom center;
+
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+    }
+
+    /* ==================================
+       PARPADEO FLUIDO
+    ================================== */
+
+    /*
+      Las dos imágenes tienen el mismo ciclo.
+      Cuando una desaparece, la otra aparece.
+      Esto suaviza la transición entre ambas.
+    */
+
+    .ojos-abiertos {
+      opacity: 100;
+      animation: ojos-abiertos infinite;
+    }
+
+    .ojos-cerrados {
+      opacity: 0;
+      animation: ojos-cerrados 3.5s infinite;
+    }
+
+    @keyframes ojos-abiertos {
+      0%,
+      82%,
+      100% {
+        opacity: 1;
+      }
+
+      84% {
+        opacity: 0.65;
+      }
+
+      86%,
+      92% {
+        opacity: 0;
+      }
+
+      94% {
+        opacity: 0.65;
+      }
+
+      96% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes ojos-cerrados {
+      0%,
+      82%,
+      100% {
+        opacity: 0;
+      }
+
+      84% {
+        opacity: 0.35;
+      }
+
+      86%,
+      92% {
+        opacity: 1;
+      }
+
+      94% {
+        opacity: 0.35;
+      }
+
+      96% {
+        opacity: 0;
+      }
+    }
+
+    /* ==================================
+       BOTÓN CENTRAL
+    ================================== */
+
+    .boton-iniciar {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+
+      transform: translate(-50%, -50%);
+
+      width: clamp(150px, 25vw, 320px);
+      max-width: 80%;
+
+      padding: 0;
+      border: none;
+      background: transparent;
+
+      cursor: pointer;
+      z-index: 5;
+
+      transition:
+        transform 0.2s ease,
+        filter 0.2s ease;
+
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .boton-iniciar img {
+      display: block;
+      width: 100%;
+      height: auto;
+
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+    }
+
+    .boton-iniciar:hover {
+      transform: translate(-50%, -50%) scale(1.05);
+      filter: brightness(1.08);
+    }
+
+    .boton-iniciar:active {
+      transform: translate(-50%, -50%) scale(0.96);
+    }
+
+    .boton-iniciar:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 5px;
+      border-radius: 12px;
+    }
+
+    /* ==================================
+       MENSAJE TEMPORAL
+    ================================== */
+
+    .mensaje {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(16px, 5vh, 50px);
+
+      width: max-content;
+      max-width: calc(100% - 32px);
+
+      padding: 12px 20px;
+      border-radius: 12px;
+
+      transform: translate(-50%, 12px);
+
+      background: rgba(0, 0, 0, 0.82);
+      color: #fff;
+
+      font-size: clamp(14px, 1.6vw, 20px);
+      line-height: 1.4;
+      text-align: center;
+
+      opacity: 0;
+      visibility: hidden;
+
+      transition:
+        opacity 0.25s ease,
+        transform 0.25s ease,
+        visibility 0.25s ease;
+
+      z-index: 10;
+    }
+
+    .mensaje.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, 0);
+    }
+
+    /* ==================================
+       PORTÁTILES Y TABLETAS
+    ================================== */
+
+    @media (max-width: 1024px) {
+      .personajes {
+        left: 1.5%;
+        width: clamp(220px, 43vw, 430px);
+        height: 45%;
+      }
+
+      .boton-iniciar {
+        width: clamp(160px, 29vw, 280px);
+      }
+    }
+
+    /* ==================================
+       CELULARES
+    ================================== */
+
+    @media (max-width: 600px) {
+      .personajes {
+        left: 0;
+        width: 57vw;
+        height: 34%;
+      }
+
+      .doctor {
+        width: 65%;
+        height: 100%;
+      }
+
+      .perrito {
+        width: 47%;
+        height: 65%;
+        margin-left: -10%;
+      }
+
+      .boton-iniciar {
+        width: clamp(145px, 42vw, 240px);
+        max-width: 72%;
+
+        transform:
+          translate(-50%, -50%)
+          translateY(-5%);
+      }
+
+      .boton-iniciar:hover {
+        transform:
+          translate(-50%, -50%)
+          translateY(-5%)
+          scale(1.04);
+      }
+
+      .boton-iniciar:active {
+        transform:
+          translate(-50%, -50%)
+          translateY(-5%)
+          scale(0.96);
+      }
+
+      .mensaje {
+        bottom: 16px;
+        max-width: calc(100% - 24px);
+        padding: 10px 15px;
+        font-size: 14px;
+      }
+    }
+
+    /* ==================================
+       CELULARES PEQUEÑOS
+    ================================== */
+
+    @media (max-width: 380px) {
+      .personajes {
+        width: 60vw;
+        height: 32%;
+      }
+
+      .doctor {
+        width: 65%;
+      }
+
+      .perrito {
+        width: 47%;
+        height: 65%;
+        margin-left: -10%;
+      }
+
+      .boton-iniciar {
+        width: 44vw;
+        max-width: 210px;
+        min-width: 135px;
+      }
+    }
+
+    /* ==================================
+       CELULAR EN HORIZONTAL
+    ================================== */
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      .personajes {
+        height: 76%;
+        width: clamp(200px, 35vw, 370px);
+      }
+
+      .boton-iniciar {
+        width: clamp(120px, 22vh, 190px);
+        max-width: 35vw;
+      }
+
+      .mensaje {
+        bottom: 8px;
+        padding: 7px 12px;
+        font-size: 13px;
+      }
+    }
+
+    /* ==================================
+       TABLETA EN VERTICAL
+    ================================== */
+
+    @media (min-width: 601px) and (max-width: 900px)
+      and (orientation: portrait) {
+      .personajes {
+        width: 48vw;
+        height: 38%;
+      }
+
+      .boton-iniciar {
+        width: clamp(190px, 30vw, 280px);
+      }
+    }
+
+    /* Se mantiene el parpadeo incluso si el
+       sistema tiene activada la reducción
+       de movimiento. */
+
+    @media (prefers-reduced-motion: reduce) {
+      .boton-iniciar,
+      .mensaje {
+        transition: none;
+      }
+    }
+  
+#presentationScreen{position:fixed;inset:0;z-index:200000;width:100%;height:100%;background:#000} #presentationScreen .pantalla-inicio{position:absolute;inset:0;width:100%;height:100%;height:100dvh} #presentationScreen .fondo{z-index:0} #presentationScreen .personajes,#presentationScreen .boton-iniciar,#presentationScreen .mensaje{z-index:2} #presentationScreen .boton-iniciar{z-index:5}
+</style>
+<div id="presentationScreen" aria-label="Presentación de Zootópolis"><main class="pantalla-inicio">
+
+    <!-- FONDO -->
+    <img
+      class="fondo"
+      src="https://i.ibb.co/xS7DTCrn/inicio-1.png"
+      alt=""
+      fetchpriority="high"
+    >
+
+    <!-- PERSONAJES -->
+    <div class="personajes">
+
+      <!-- DOCTOR -->
+      <div class="personaje doctor">
+
+        <!-- OJOS ABIERTOS -->
+        <img
+          class="ojos-abiertos"
+          src="https://i.ibb.co/N27DK6bD/sacha-ojos-abiertos.png"
+          alt="Doctor"
+          fetchpriority="high"
+        >
+
+        <!-- OJOS CERRADOS -->
+        <img
+          class="ojos-cerrados"
+          src="https://i.ibb.co/7xM5KvjQ/doctor-ojos-cerrados.png"
+          alt=""
+          aria-hidden="true"
+        >
+
+      </div>
+
+      <!-- PERRITO -->
+      <div class="personaje perrito">
+
+        <!-- OJOS ABIERTOS -->
+        <img
+          class="ojos-abiertos"
+          src="https://i.ibb.co/ZzgQpskk/perro-ojos-abiertos.png"
+          alt="Perrito"
+          fetchpriority="high"
+        >
+
+        <!-- OJOS CERRADOS -->
+        <img
+          class="ojos-cerrados"
+          src="https://i.ibb.co/XZxSzY0H/perrito-ojos-cerrados.png"
+          alt=""
+          aria-hidden="true"
+        >
+
+      </div>
+
+    </div>
+
+    <!-- BOTÓN DE INICIO -->
+    <button
+      class="boton-iniciar"
+      id="btnIniciar"
+      type="button"
+      aria-label="Iniciar aventura"
+    >
+      <img
+        src="https://i.ibb.co/T6KTNBN/Chat-GPT-Image-8-sept-2026-09-59-37-a-m.png"
+        alt="Iniciar"
+      >
+    </button>
+
+    <!-- MENSAJE -->
+    <div
+      class="mensaje"
+      id="mensaje"
+      role="status"
+      aria-live="polite"
+    >
+      ¡Pronto comenzará la aventura!
+    </div>
+
+  </main></div>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+ const screen=document.getElementById('presentationScreen');
+ const start=document.getElementById('btnIniciar');
+ const volver=document.getElementById('volverInicio');
+ start.addEventListener('click',function(){
+   screen.style.transition='opacity .35s ease';
+   screen.style.opacity='0';
+   screen.style.pointerEvents='none';
+   setTimeout(function(){screen.style.display='none';},380);
+ });
+ if(volver) volver.addEventListener('click',function(event){
+   event.preventDefault();
+   const lobit=document.getElementById('lobitScreen');
+   if(lobit) lobit.style.display='none';
+   screen.style.transition='none';
+   screen.style.display='block';
+   screen.style.opacity='1';
+   screen.style.pointerEvents='auto';
+   window.scrollTo(0,0);
+ });
+});
+</script>
+
+</head>
+<body>
+<section id="lobitScreen" aria-label="Selección de niveles">
+<main class="pantalla-niveles">
+<header class="encabezado"><img class="logo" src="https://i.ibb.co/qLsVQhPW/zootopolis-niveles.png" alt="Zootópolis - Niveles"></header>
+<nav class="lista-niveles" aria-label="Seleccionar nivel">
+<a class="nivel" href="#nivel1" data-nivel="1" aria-label="Jugar nivel 1"><img src="https://i.ibb.co/3y9fmfS8/nivel-1.png" alt="Nivel 1" draggable="false"></a>
+<a class="nivel" href="#nivel2" data-nivel="2" aria-label="Nivel 2 bloqueado hasta completar el rescate"><img src="https://i.ibb.co/W41Tpz4K/nivel-2.png" alt="Nivel 2" draggable="false"><span class="candado" aria-hidden="true">🔒<small>BLOQUEADO</small></span></a>
+<a class="nivel" href="#" data-nivel="3" aria-label="Nivel 3 bloqueado"><img src="https://i.ibb.co/DgQhxPxJ/nivel-3.png" alt="Nivel 3" draggable="false"><span class="candado" aria-hidden="true">🔒<small>BLOQUEADO</small></span></a>
+<a class="nivel" href="#" data-nivel="4" aria-label="Nivel 4 bloqueado"><img src="https://i.ibb.co/LXmRZWjC/nivel-4.png" alt="Nivel 4" draggable="false"><span class="candado" aria-hidden="true">🔒<small>BLOQUEADO</small></span></a>
+<a class="nivel" href="#" data-nivel="5" aria-label="Nivel 5 bloqueado"><img src="https://i.ibb.co/V0kH2yk6/nivel-5.png" alt="Nivel 5" draggable="false"><span class="candado" aria-hidden="true">🔒<small>BLOQUEADO</small></span></a>
+</nav>
+<p class="estado-niveles" id="estadoNiveles" role="status">Solo el nivel 1 está disponible. Rescata al perrito para desbloquear el nivel 2.</p>
+<footer class="zona-volver"><a class="boton-volver" id="volverInicio" href="#" aria-label="Volver al menú principal"><img src="https://i.ibb.co/1Gt6g431/boton-atras.png" alt="Volver" draggable="false"></a></footer>
+</main>
+</section>
+<section id="level1Screen" aria-label="Nivel 1">
+<h1>ZOOTÓPOLIS</h1>
+<nav class="topNavigation" aria-label="Navegación del juego">
+    <a class="backToLobit" href="#lobit" id="backToLobit">← VOLVER AL LOBIT</a>
+</nav>
+
+<div id="gamePanel">
+    <div id="hud">
+        <div class="hudItem">❤️ Vidas: <span id="lives">3</span></div>
+        <div class="hudItem">🐶 Misión: rescata al perrito</div>
+        <div class="hudItem" id="status">¡Prepárate!</div>
+    </div>
+
+    <div id="gameWrap">
+        <canvas id="game" width="1000" height="650"></canvas>
+
+        <div id="overlay">
+            <h2 id="overlayTitle">¡Bienvenido a Zootópolis!</h2>
+            <p id="overlayText">
+                Eres un doctor veterinario. Cruza las calles con cuidado,
+                esquiva los vehículos, rescata al perrito herido y llévalo
+                al hospital.
+            </p>
+            <button id="startButton">INICIAR NIVEL 1</button>
+        </div>
+    </div>
+
+    <div id="mobileControls">
+        <button id="up" aria-label="Arriba">▲</button>
+        <button id="left" aria-label="Izquierda">◀</button>
+        <button id="down" aria-label="Abajo">▼</button>
+        <button id="right" aria-label="Derecha">▶</button>
+    </div>
+
+    <p id="instructions">
+        Controles: flechas del teclado o W, A, S, D.<br>
+        Evita los carros, rescata al perrito y toca el hospital con él para entregarlo.
+    </p>
+</div>
+
+<section id="hospitalRoom" aria-label="Sala de atención veterinaria">
+    <header class="roomHeader">
+        <div class="roomBrand">✚ ZOOTÓPOLIS VET</div>
+        <div class="roomStatus">● UNIDAD DE URGENCIAS · ACTIVA</div>
+    </header>
+    <div class="roomContent">
+        <h2 class="roomTitle">NIVEL 2 · ATENCIÓN ANIMAL</h2>
+        <p class="roomSubtitle">El doctor está atendiendo al perrito. Los monitores están estables y el equipo veterinario trabaja para que se recupere pronto.</p>
+        <div class="roomScene">
+            <div class="medicalPanel">
+                <h3>MONITOR VITAL</h3>
+                <div class="monitor" aria-label="Monitor de signos vitales">
+                    <svg viewBox="0 0 180 74" role="img" aria-label="Señal cardíaca">
+                        <path class="ecgTrace" d="M0 39 H18 L28 39 L36 39 L44 17 L54 58 L65 29 L75 39 H92 L104 39 L113 39 L122 12 L133 59 L144 39 H180" fill="none" stroke="#5fffd0" stroke-width="2.5" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="vitalReadings" style="display:flex;justify-content:space-between;gap:8px;margin-top:9px;color:#8af6ff;font-size:12px;font-weight:bold">
+                    <span>FC <strong id="heartRate">92</strong> lpm</span>
+                    <span>SpO₂ <strong id="oxygenRate">98</strong>%</span>
+                </div>
+                <div class="panelLine"></div><div class="panelLine"></div>
+            </div>
+            <div class="carePod">
+                <img class="doctorRoomImage" src="https://i.ibb.co/rRndZ3k8/CENTRO.png" alt="Doctor veterinario atendiendo al paciente">
+                <img class="dogRoomImage" src="https://i.ibb.co/HDMMGk9k/perrito-herido.png" alt="Perrito herido en tratamiento">
+                <div class="careLabel">PACIENTE EN TRATAMIENTO</div>
+            </div>
+            <div class="medicalPanel">
+                <h3>ASISTENCIA VETERINARIA</h3>
+                <div class="monitor" style="display:flex;align-items:center;justify-content:center;gap:10px;color:#8af6ff;font-size:32px" aria-label="Equipo médico">✚ <span style="font-size:25px">♡</span></div>
+                <div class="panelLine"></div><div class="panelLine"></div>
+            </div>
+        </div>
+        <section class="treatmentVisual" aria-label="Vista del procedimiento veterinario">
+            <div class="treatmentVisualHeader"><strong>🔬 VISTA DEL PROCEDIMIENTO</strong><span class="liveBadge">SIMULACIÓN EN CURSO</span></div>
+            <div class="treatmentVisualBody">
+                <div class="legStage" id="legStage" data-step="0">
+                    <svg class="legSvg" viewBox="0 0 360 230" role="img" aria-label="Ilustración de la pata del perrito durante el tratamiento">
+                        <defs><linearGradient id="furShade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2cba6"/><stop offset="1" stop-color="#b97c5e"/></linearGradient><linearGradient id="gauzeShade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffdf2"/><stop offset="1" stop-color="#c8d9e0"/></linearGradient></defs>
+                        <ellipse cx="184" cy="202" rx="105" ry="12" fill="#020b12" opacity=".45"/>
+                        <path class="legSkin" fill="url(#furShade)" d="M130 24 C113 43 117 76 128 103 L144 154 C148 169 144 184 133 193 C123 202 131 215 151 216 L226 216 C245 214 250 202 236 190 C224 179 220 165 224 148 L240 91 C249 61 236 34 215 24 Z"/>
+                        <path class="legSkin" fill="url(#furShade)" d="M130 24 C149 12 194 11 215 24 C228 34 227 49 211 55 C186 64 155 59 135 49 C124 43 122 32 130 24 Z"/>
+                        <path class="pawPad" d="M151 196 Q166 187 181 196 Q194 188 208 196 Q224 199 230 211 Q225 220 207 220 L150 220 Q135 219 134 211 Q139 200 151 196Z"/>
+                        <path class="wound" d="M171 114 Q181 104 191 114 L188 131 Q180 140 171 130Z" fill="#9c3548" stroke="#ff9aaa" stroke-width="2"/>
+                        <path class="cleanGlow" d="M153 103 Q181 91 207 106 L205 143 Q180 158 157 142Z"/>
+                        <g class="needleTool"><rect x="168" y="57" width="14" height="46" rx="3" fill="#d8f6ff" stroke="#3bc6df" stroke-width="2"/><rect x="171" y="44" width="8" height="15" rx="2" fill="#6ee7f9"/><path d="M175 103 L175 124" stroke="#dceef5" stroke-width="2"/><path d="M163 48 H187" stroke="#dceef5" stroke-width="4" stroke-linecap="round"/><path d="M171 69 H179 M171 77 H179 M171 85 H179" stroke="#258ca5" stroke-width="1.5"/></g>
+                        <g class="splintLeft"><path d="M142 96 L154 91 L177 176 L164 181 Z" fill="#d9c59a" stroke="#fff0c8" stroke-width="2"/><path d="M150 112 L161 108 M155 132 L166 128 M160 151 L171 147" stroke="#8c785b" stroke-width="2"/></g>
+                        <g class="splintRight"><path d="M208 91 L221 96 L199 181 L186 176 Z" fill="#d9c59a" stroke="#fff0c8" stroke-width="2"/><path d="M202 108 L213 112 M197 128 L208 132 M192 147 L203 151" stroke="#8c785b" stroke-width="2"/></g>
+                        <g class="medicineDrop"><path d="M180 98 C180 98 169 111 169 117 A11 11 0 0 0 191 117 C191 111 180 98 180 98Z" fill="#56e5c4" stroke="#d5fff5" stroke-width="2"/><circle cx="180" cy="117" r="3" fill="#effffb"/></g>
+                        <path class="gauzeWrap" d="M143 112 C165 98 200 101 216 115 L211 127 C190 115 166 115 148 129 L153 141 C173 128 197 129 208 141 L203 153 C185 143 168 145 158 158 L163 170 C178 160 193 162 199 173 L194 185 C177 177 163 185 157 194" fill="none" stroke="url(#gauzeShade)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="gauzeWrap" d="M145 113 C166 100 199 103 214 116 M151 139 C171 126 197 128 208 141 M160 166 C175 155 193 160 200 173" fill="none" stroke="#a9bdc9" stroke-width="2"/>
+                    </svg>
+                    <div class="instrumentLabel" id="instrumentLabel">PACIENTE LISTO PARA EVALUACIÓN</div>
+                </div>
+                <div class="visualSide"><span class="visualStepNumber" id="visualStepNumber">PASO 0 DE 6</span><div class="visualStepTitle" id="visualStepTitle">Preparación del paciente</div><p class="visualStepDesc" id="visualStepDesc">Comienza revisando los signos vitales. La ilustración cambiará después de cada acción validada para mostrar el avance del tratamiento.</p><div class="visualChecklist"><div class="visualCheckItem" data-visual-check="0"><span>•</span> Evaluación inicial</div><div class="visualCheckItem" data-visual-check="1"><span>•</span> Zona limpia y preparada</div><div class="visualCheckItem" data-visual-check="2"><span>•</span> Anestesia simulada</div><div class="visualCheckItem" data-visual-check="3"><span>•</span> Férula colocada</div><div class="visualCheckItem" data-visual-check="4"><span>•</span> Medicación registrada</div><div class="visualCheckItem" data-visual-check="5"><span>•</span> Vendaje final</div></div></div>
+            </div>
+        </section>
+        <section id="memoryChallenge" class="procedurePanel" style="margin-bottom:14px" aria-labelledby="memoryTitle">
+ <h3 id="memoryTitle">🧠 Reto de memoria veterinaria</h3>
+ <p id="memoryInstruction" style="margin:8px 0 12px;color:#d8f4df">Memoriza el orden correcto. Tienes 12 segundos; luego tendrás que reconstruirlo.</p>
+ <div id="memorySequence" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center"></div>
+ <div id="memoryChoices" style="display:none;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px"></div>
+ <p id="memoryFeedback" role="status" style="margin-top:10px;font-weight:800"></p>
+</section>
+<section class="procedurePanel" aria-labelledby="procedureTitle">
+            <div class="procedureTop">
+                <div>
+                    <h3 id="procedureTitle">🩺 Nivel 2 · Ordena y realiza la operación</h3>
+                    <p>Primero memoriza la secuencia y después ordénala correctamente. Un error invalida la operación.</p>
+                </div>
+                <div class="procedureProgress"><span id="procedureCount">0</span>/6 pasos</div>
+            </div>
+            <div class="procedureProgressTrack" role="progressbar" aria-label="Progreso del tratamiento" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="procedureProgressTrack"><div class="procedureProgressFill" id="procedureProgressFill"></div></div>
+            <ol id="procedureSteps" class="procedureSteps">
+                <li class="procedureStep" data-step="0"><span class="stepCheck">○</span><div><strong>1. Evaluar signos vitales</strong><small>Revisa el monitor antes de comenzar.</small></div><button type="button" class="stepAction">Evaluar</button></li>
+                <li class="procedureStep lockedStep" data-step="1"><span class="stepCheck">○</span><div><strong>2. Limpiar la herida</strong><small>Preparar la zona de la pata para el tratamiento.</small></div><button type="button" class="stepAction" disabled>Limpiar</button></li>
+                <li class="procedureStep lockedStep" data-step="2"><span class="stepCheck">○</span><div><strong>3. Aplicar anestesia e inyección</strong><small>Acción simulada dentro del juego.</small></div><button type="button" class="stepAction" disabled>Aplicar</button></li>
+                <li class="procedureStep lockedStep" data-step="3"><span class="stepCheck">○</span><div><strong>4. Alinear y estabilizar la fractura</strong><small>Colocar una férula para inmovilizar la pata.</small></div><button type="button" class="stepAction" disabled>Estabilizar</button></li>
+                <li class="procedureStep lockedStep" data-step="4"><span class="stepCheck">○</span><div><strong>5. Administrar medicamento</strong><small>Seleccionar el medicamento del botiquín virtual.</small></div><button type="button" class="stepAction" disabled>Medicar</button></li>
+                <li class="procedureStep lockedStep" data-step="5"><span class="stepCheck">○</span><div><strong>6. Colocar vendaje final</strong><small>Terminar la atención y comprobar la recuperación.</small></div><button type="button" class="stepAction" disabled>Vendar</button></li>
+            </ol>
+            <p id="procedureMessage" class="procedureMessage" role="status">Comienza evaluando los signos vitales del perrito.</p>
+        </section>
+        <div class="doorPanel">
+            <button class="levelDoor" id="level2Button" disabled>🔒 COMPLETA LA OPERACIÓN PARA FINALIZAR EL NIVEL 2</button>
+            <p class="doorHint" id="doorHint">Completa los seis pasos en el orden correcto para superar Atención animal y preparar el Nivel 3: Cuidado y recuperación.</p>
+        </div>
+    </div>
+</section>
+</section>
+<section id="level3Screen" aria-label="Nivel 3 Cuidado y recuperación">
+  <header class="mazeHeader">
+    <div><h1>🌿 NIVEL 3 · CUIDADO Y RECUPERACIÓN</h1><p>Rescata al conejito, evita al troll y llévalo al hospital antes de que termine el tiempo.</p></div>
+    <button type="button" id="backFromLevel3">← VOLVER AL LOBIT</button>
+  </header>
+  <div class="mazeHud">
+    <span>❤️ Vidas: <strong id="mazeLives">3</strong></span>
+    <span>⏱️ Tiempo: <strong id="mazeTimer">04:00</strong></span>
+    <span class="supplyCount" title="Suero hidratante"><img src="https://i.ibb.co/NDMp5Mg/suero-hidratante.png" alt="Suero"><span>Suero</span><strong id="countSerum">0/5</strong></span>
+    <span class="supplyCount" title="Analgésicos"><img src="https://i.ibb.co/bjY4KRtd/analgesicos.png" alt="Analgésicos"><span>Analgesia</span><strong id="countPain">0/5</strong></span>
+    <span class="supplyCount" title="Zanahorias"><img src="https://i.ibb.co/WhpNDvG/Mejora-de-logo-y-fondo-4.png" alt="Zanahorias"><span>Comida</span><strong id="countCarrot">0/5</strong></span>
+    <span id="mazeStatus">Encuentra al conejito.</span>
+  </div>
+  <div class="mazeWrap">
+    <canvas id="mazeCanvas" width="960" height="600" aria-label="Laberinto del nivel 3"></canvas>
+    <div id="mazeOverlay" class="mazeOverlay missionOverlay">
+      <div class="missionCard">
+        <div class="missionEyebrow"><span class="missionPulse"></span> ZOOTÓPOLIS · MISIÓN 03</div>
+        <h2 id="mazeOverlayTitle">¡Una vida necesita tu ayuda!</h2>
+        <p id="mazeOverlayText" class="missionLead">Un pequeño paciente está perdido y necesita llegar al hospital. ¡Contamos contigo para rescatarlo!</p>
+        <div class="missionCharacters" aria-label="El doctor y el conejo desnutrido que necesita ayuda">
+          <div class="missionCharacter"><div class="missionImageFrame doctorFrame"><img src="https://i.ibb.co/rRndZ3k8/CENTRO.png" alt="Doctor veterinario de Zootópolis" loading="eager" decoding="async" referrerpolicy="no-referrer"></div><span>Tu equipo de rescate</span></div>
+          <div class="missionArrow" aria-hidden="true">➜</div>
+          <div class="missionCharacter"><div class="missionImageFrame rabbitFrame"><img src="https://i.ibb.co/Ld4VgKDC/conejo-desnutrido.png" alt="Conejo desnutrido que necesita rescate" loading="eager" decoding="async" referrerpolicy="no-referrer"></div><span>Conejo desnutrido</span></div>
+        </div>
+        <div class="missionObjectives">
+          <div><span>01</span><p>Encuentra al conejo desnutrido en el laberinto.</p></div>
+          <div><span>02</span><p>Recolecta 5 sueros, 5 analgésicos y 5 zanahorias por el camino.</p></div>
+          <div><span>03</span><p>Evita a los trolls y regresa con el conejo al hospital para completar su tratamiento.</p></div>
+        </div>
+        <button type="button" id="mazeStartButton"><span aria-hidden="true">▶</span> COMENZAR MISIÓN</button>
+        <small class="missionHint">Tienes 4 minutos · Flechas o W, A, S, D para moverte · X para disparar</small>
+      </div>
+    </div>
+  </div>
+  <div class="mazeControls" aria-label="Controles táctiles del laberinto">
+    <button data-maze-dir="up" aria-label="Arriba">▲</button><div><button data-maze-dir="left" aria-label="Izquierda">◀</button><button data-maze-dir="down" aria-label="Abajo">▼</button><button data-maze-dir="right" aria-label="Derecha">▶</button></div>
+  </div>
+  <p class="mazeInstructions">Usa las flechas o W, A, S, D para moverte y pulsa X para lanzar una bolita que elimina monstruos. Recolecta 5 sueros, 5 analgésicos y 5 zanahorias; son necesarios para tratar al conejo. Si te alcanzan, perderás una vida. Tienes 3 vidas y 4 minutos. ¡Cuidado con las puertas que se cierran temporalmente!</p>
+</section>
+<section id="level4Screen" aria-label="Nivel 4: Alimenta a la nutria">
+  <header class="otterHeader">
+    <div><p class="otterKicker">ZOOTÓPOLIS · MISIÓN DE CONFIANZA</p><h1>🐟 NIVEL 4 · ALIMENTA A LA NUTRIA</h1><p>Un zoológico abandonado, un estanque olvidado y una pequeña vida que nadie vino a buscar. ¡Ayuda a la nutria!</p></div>
+    <button type="button" id="backFromLevel4">← VOLVER AL LOBIT</button>
+  </header>
+  <div class="otterHud">
+    <div class="otterMeter"><div class="otterMeterLabel"><span>⚡ Energía</span><strong id="otterEnergyText">0%</strong></div><div class="otterTrack"><div id="otterEnergyBar" class="otterFill energyFill"></div></div></div>
+    <div class="otterMeter"><div class="otterMeterLabel"><span>💚 Confianza</span><strong id="otterTrustText">0%</strong></div><div class="otterTrack"><div id="otterTrustBar" class="otterFill trustFill"></div></div></div>
+    <div class="otterStat">🐟 Peces acertados <strong id="otterHits">0/12</strong></div>
+    <div class="otterStat">⏱️ Tiempo <strong id="otterTimer">01:05</strong></div>
+  </div>
+  <div class="otterGameWrap">
+    <canvas id="otterCanvas" width="960" height="540" aria-label="Lago donde lanzas peces para alimentar a la nutria"></canvas>
+    <div class="otterOverlay" id="otterOverlay">
+      <div class="otterMissionCard">
+        <span class="otterBadge">EXPEDIENTE DE RESCATE · ZONA CERRADA</span><h2 id="otterOverlayTitle">🌿 La última habitante del zoológico</h2>
+        <div class="otterIntroImages otterStoryArt"><img src="https://i.ibb.co/cc4ZGR2m/doctor-y-la-nutria.png" alt="El doctor encuentra a la nutria olvidada"></div>
+        <p class="otterStoryText" id="otterOverlayText">Hace años, este zoológico cerró sus puertas. Las jaulas quedaron vacías, los letreros se oxidaron y la maleza cubrió los caminos. Pero nadie se dio cuenta de que una pequeña nutria seguía viviendo en el viejo estanque. El doctor ha encontrado su rastro: aliméntala para recuperar su energía y ganarte su confianza.</p>
+        <button type="button" id="otterStartButton">▶ COMENZAR A ALIMENTAR</button>
+        <small>🖱️ Haz clic en el estanque para lanzar peces. La nutria es asustadiza: espera a que salga del agua y apunta con cuidado.</small>
+      </div>
+    </div>
+  </div>
+  <p class="otterInstructions">🏚️ Explora el estanque del zoológico olvidado. 🖱️ Haz clic en el agua para lanzar peces hacia la nutria. Si se sumerge, espera a que vuelva a salir. Necesitas 12 aciertos antes de que termine el tiempo.</p>
+</section>
+
+<section id="level5Screen" aria-label="Nivel 5: Libera a los animalitos">
+ <header class="rescue5Header"><div><p class="otterKicker">ZOOTÓPOLIS · MISIÓN FINAL</p><h1>🏥 NIVEL 5 · LIBERA A LOS ANIMALITOS</h1><p>Rescata a los cuatro pacientes del hospital y ayúdalos a regresar a un lugar seguro.</p></div><button type="button" id="backFromLevel5">← VOLVER AL LOBIT</button></header>
+ <div class="rescue5Hud"><div class="rescue5Stat">🐾 Pacientes liberados<strong id="rescue5Count">0/4</strong></div><div class="rescue5Stat">🛡️ Vidas<strong id="rescue5Lives">3</strong></div><div class="rescue5Stat">👾 Enemigos derrotados<strong id="rescue5Kills">0</strong></div><div class="rescue5Stat">⏱️ Tiempo<strong id="rescue5Timer">02:30</strong></div><div class="rescue5BossHealth" id="rescue5BossHealth"><div><strong>👹 VIDA DEL MONSTRUO</strong><span id="rescue5BossHealthText">600 / 600</span></div><div class="rescue5BossTrack"><div id="rescue5BossHealthFill"></div></div></div></div>
+ <div class="rescue5GameWrap"><canvas id="rescue5Canvas" width="960" height="540" aria-label="Hospital, jaulas y hábitats naturales de los animales"></canvas>
+  <div class="rescue5Overlay" id="rescue5Overlay"><div class="rescue5Card"><span class="otterBadge">EXPEDIENTE FINAL · RESCATE ANIMAL</span><h2 id="rescue5Title">🔓 ¡Ningún animal se queda atrás!</h2><div class="rescue5Animals"><div><img src="https://i.ibb.co/3yTxpj4n/conejo-enjaulado.png" alt="Conejo enjaulado"><span>🐰 Conejo</span></div><div><img src="https://i.ibb.co/fRGsqqQ/gato-enjaluado.png" alt="Gato enjaulado"><span>🐱 Gato</span></div><div><img src="https://i.ibb.co/W9yjg4B/nutria-enjaulada.png" alt="Nutria enjaulada"><span>🦦 Nutria</span></div><div><img src="https://i.ibb.co/SD8BcwY3/perrito-en-jaula.png" alt="Perrito enjaulado"><span>🐶 Perrito</span></div></div><p id="rescue5Text">Los cuatro animalitos están encerrados en la sala del hospital. Un monstruo patrulla el lugar y quiere impedir la liberación. Acércate a cada jaula y pulsa E o ESPACIO para abrirla. Usa X para lanzar el poder del doctor y defenderte. El monstruo tiene 600 puntos de vida, lanza tres tipos de poderes y puede volver a encerrar a las mascotas si las alcanza.</p><button type="button" id="rescue5Start">▶ COMENZAR RESCATE</button><small>Flechas o W A S D para moverte · E/ESPACIO para abrir jaulas · X para defenderte.</small></div></div>
+ </div>
+ <div class="rescue5Touch" aria-label="Controles táctiles"><div><button data-rescue5-dir="up">▲</button><div><button data-rescue5-dir="left">◀</button><button data-rescue5-dir="down">▼</button><button data-rescue5-dir="right">▶</button></div></div><button class="action5" data-rescue5-action="free">ABRIR JAULA</button><button class="action5" data-rescue5-action="shoot">PODER X</button></div>
+ <p class="rescue5Instructions">🏥 Libera al conejo, gato, nutria y perrito. El conejo irá a la pradera, la nutria al estanque y el gato al jardín; el perrito se quedará junto al doctor. Evita sus tres tipos de poderes, dispara repetidamente con X y protege a los animalitos: si el monstruo los toca, volverán a sus jaulas.</p>
+</section>
+
+<script>
+
+"use strict";
+
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const livesElement = document.getElementById("lives");
+const statusElement = document.getElementById("status");
+const overlay = document.getElementById("overlay");
+const overlayTitle = document.getElementById("overlayTitle");
+const overlayText = document.getElementById("overlayText");
+const startButton = document.getElementById("startButton");
+const gamePanel = document.getElementById("gamePanel");
+const hospitalRoom = document.getElementById("hospitalRoom");
+const level2Button = document.getElementById("level2Button");
+let roomTransitionTimer = null;
+const LEVEL1_CLEAR_KEY = "zootopolis_nivel1_rescate_ok_v3";
+const LEVEL2_UNLOCK_KEY = "zootopolis_nivel2_desbloqueado_v3";
+const LEVEL3_UNLOCK_KEY = "zootopolis_nivel3_desbloqueado_v3";
+let completedProcedureSteps = 0;
+let vitalMonitorTimer = null;
+
+const WIDTH = canvas.width;
+const HEIGHT = canvas.height;
+
+const images = {};
+
+function loadImage(name, src) {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => draw();
+    images[name] = img;
+}
+
+loadImage("grass", "https://i.ibb.co/b5qV0pb4/cesped.png");
+loadImage("doctor", "https://i.ibb.co/rRndZ3k8/CENTRO.png");
+loadImage("doctorClosed", "https://i.ibb.co/7xM5KvjQ/doctor-ojos-cerrados.png");
+loadImage("doctorRight", "https://i.ibb.co/KRWWzs1/Doctor-derecha.png");
+loadImage("doctorLeft", "https://i.ibb.co/7d7XYNmZ/Doctor-izquierda.png");
+loadImage("dog", "https://i.ibb.co/HDMMGk9k/perrito-herido.png");
+loadImage("healthyDog", "https://i.ibb.co/MkkRd3hy/perro-pag-web.png");
+loadImage("hospital", "https://i.ibb.co/39px99Y4/hospital.png");
+
+const playerStart = { x: 235, y: 555 };
+
+/* =====================================================
+   AJUSTE DE VELOCIDAD DEL DOCTOR
+   Cambia PLAYER_SPEED para regular el movimiento:
+   1.8 = lento | 2.2 = normal recomendado | 3.0 = rápido
+   ===================================================== */
+const PLAYER_SPEED = 2.2;
+
+const player = {
+    x: playerStart.x,
+    y: playerStart.y,
+    w: 48,
+    h: 64,
+    speed: PLAYER_SPEED,
+    direction: "up",
+    hasDog: false,
+    invulnerable: 0
+};
+
+/*
+ * El perrito queda en una zona despejada.
+ * La casa que antes podía bloquear el acceso
+ * fue retirada del lado superior derecho.
+ */
+const dog = {
+    x: 700,
+    y: 45,
+    w: 62,
+    h: 52,
+    rescued: false
+};
+
+const hospital = {
+    x: 410,
+    y: 526,
+    w: 180,
+    h: 112
+};
+
+/* Calles horizontales */
+const roads = [
+    { y: 105, h: 105 },
+    { y: 260, h: 105 },
+    { y: 415, h: 105 }
+];
+
+/* Casas decorativas */
+const houses = [
+    { x: 25, y: 20, w: 72, h: 65, wall: "#f3c77b", roof: "#c65b46" },
+    { x: 135, y: 32, w: 68, h: 58, wall: "#b8d9ef", roof: "#526e9d" },
+
+    /* Espacio despejado para encontrar al perrito */
+
+    { x: 890, y: 30, w: 75, h: 62, wall: "#e6b8d7", roof: "#7552a0" },
+
+    { x: 25, y: 535, w: 72, h: 65, wall: "#e6d6a7", roof: "#5a936b" },
+    { x: 135, y: 545, w: 68, h: 58, wall: "#eebca4", roof: "#a84d43" },
+    { x: 790, y: 535, w: 75, h: 70, wall: "#d0e3b2", roof: "#648c54" },
+    { x: 900, y: 545, w: 68, h: 58, wall: "#c1d6ee", roof: "#526e9d" }
+];
+
+/* Límites sólidos de las casas */
+const houseBlocks = [
+    { x: 25, y: 10, w: 72, h: 80 },
+    { x: 135, y: 22, w: 68, h: 70 },
+    { x: 890, y: 20, w: 75, h: 75 },
+
+    { x: 25, y: 535, w: 72, h: 65 },
+    { x: 135, y: 545, w: 68, h: 58 },
+    { x: 790, y: 535, w: 75, h: 70 },
+    { x: 900, y: 545, w: 68, h: 58 }
+];
+
+/* Vehículos que circulan por las calles */
+let cars = [];
+
+function createCars() {
+    cars = [
+        { x: -120, y: 120, w: 82, h: 38, speed: 3.0, color: "#e74c3c", dir: 1 },
+        { x: 380, y: 165, w: 76, h: 36, speed: 4.0, color: "#f1c40f", dir: -1 },
+        { x: 700, y: 280, w: 85, h: 40, speed: 3.1, color: "#3498db", dir: 1 },
+        { x: 150, y: 320, w: 75, h: 36, speed: 3.8, color: "#9b59b6", dir: -1 },
+        { x: -200, y: 435, w: 86, h: 40, speed: 3.3, color: "#e67e22", dir: 1 },
+        { x: 620, y: 475, w: 76, h: 36, speed: 5.0, color: "#ecf0f1", dir: -1 }
+    ];
+}
+
+let lives = 3;
+let running = false;
+let gameWon = false;
+let animationId = null;
+let lastTime = 0;
+let frameCounter = 0;
+
+const keys = {
+    up: false,
+    down: false,
+    left: false,
+    right: false
+};
+
+function rectsOverlap(a, b) {
+    return (
+        a.x < b.x + b.w &&
+        a.x + a.w > b.x &&
+        a.y < b.y + b.h &&
+        a.y + a.h > b.y
+    );
+}
+
+/* Caja de colisión más pequeña que el dibujo */
+function playerHitbox(x = player.x, y = player.y) {
+    return {
+        x: x + 7,
+        y: y + 10,
+        w: player.w - 14,
+        h: player.h - 14
+    };
+}
+
+function canMoveTo(nextX, nextY) {
+    const hitbox = playerHitbox(nextX, nextY);
+
+    if (
+        nextX < 0 ||
+        nextY < 0 ||
+        nextX + player.w > WIDTH ||
+        nextY + player.h > HEIGHT
+    ) {
+        return false;
+    }
+
+    for (const house of houseBlocks) {
+        if (rectsOverlap(hitbox, house)) {
+            return false;
+        }
+    }
+
+    /*
+     * El hospital tiene una abertura inferior central.
+     * Los laterales y la parte superior bloquean el paso,
+     * pero el centro inferior queda libre como entrada.
+     */
+    const hospitalWalls = [
+        // Deja una abertura real en el centro para entrar desde abajo.
+        { x: hospital.x, y: hospital.y, w: 60, h: 35 },
+        { x: hospital.x + 120, y: hospital.y, w: 60, h: 35 },
+        { x: hospital.x, y: hospital.y + 35, w: 60, h: 55 },
+        { x: hospital.x + hospital.w - 60, y: hospital.y + 35, w: 60, h: 55 }
+    ];
+
+    for (const wall of hospitalWalls) {
+        if (rectsOverlap(hitbox, wall)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function drawBackground() {
+    if (images.grass && images.grass.complete && images.grass.naturalWidth > 0) {
+        ctx.drawImage(images.grass, 0, 0, WIDTH, HEIGHT);
+    } else {
+        ctx.fillStyle = "#83c86c";
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    }
+
+    /* Calles */
+    for (const road of roads) {
+        ctx.fillStyle = "#525b60";
+        ctx.fillRect(0, road.y, WIDTH, road.h);
+
+        ctx.fillStyle = "#e5e0b5";
+        ctx.fillRect(0, road.y + 5, WIDTH, 3);
+        ctx.fillRect(0, road.y + road.h - 8, WIDTH, 3);
+
+        ctx.fillStyle = "#f6e9a5";
+        for (let x = 10; x < WIDTH; x += 85) {
+            ctx.fillRect(x, road.y + road.h / 2 - 2, 42, 4);
+        }
+    }
+
+    /* Cruces peatonales */
+    for (const y of [210, 365, 520]) {
+        ctx.fillStyle = "#f4f1dc";
+        for (let x = 430; x < 570; x += 22) {
+            ctx.fillRect(x, y - 7, 12, 14);
+        }
+    }
+
+    /* Camino hacia el hospital */
+    ctx.fillStyle = "#d5c5a1";
+    ctx.fillRect(450, 520, 100, 130);
+}
+
+function drawHouse(house) {
+    ctx.fillStyle = "#0002";
+    ctx.fillRect(house.x + 5, house.y + house.h - 3, house.w, 9);
+
+    ctx.fillStyle = house.wall;
+    ctx.fillRect(house.x, house.y + 18, house.w, house.h - 18);
+
+    ctx.fillStyle = house.roof;
+    ctx.beginPath();
+    ctx.moveTo(house.x - 6, house.y + 22);
+    ctx.lineTo(house.x + house.w / 2, house.y - 7);
+    ctx.lineTo(house.x + house.w + 6, house.y + 22);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = "#f7f0d5";
+    ctx.fillRect(house.x + 10, house.y + 30, 16, 16);
+    ctx.fillRect(house.x + house.w - 26, house.y + 30, 16, 16);
+
+    ctx.strokeStyle = "#725b48";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(house.x + 10, house.y + 30, 16, 16);
+    ctx.strokeRect(house.x + house.w - 26, house.y + 30, 16, 16);
+
+    ctx.fillStyle = "#805438";
+    ctx.fillRect(house.x + house.w / 2 - 9, house.y + house.h - 25, 18, 25);
+}
+
+function drawHospital() {
+    if (images.hospital && images.hospital.complete && images.hospital.naturalWidth > 0) {
+        ctx.drawImage(images.hospital, hospital.x, hospital.y, hospital.w, hospital.h);
+    } else {
+        ctx.fillStyle = "#f2f2e8";
+        ctx.fillRect(hospital.x, hospital.y, hospital.w, hospital.h);
+
+        ctx.fillStyle = "#d94b4b";
+        ctx.fillRect(hospital.x + 60, hospital.y + 4, 60, 25);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 17px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("HOSPITAL", hospital.x + 90, hospital.y + 22);
+
+        ctx.fillStyle = "#a8d4df";
+        ctx.fillRect(hospital.x + 18, hospital.y + 43, 36, 30);
+        ctx.fillRect(hospital.x + 126, hospital.y + 43, 36, 30);
+
+        ctx.fillStyle = "#805438";
+        ctx.fillRect(hospital.x + 65, hospital.y + 70, 50, 42);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(hospital.x + 86, hospital.y + 76, 8, 28);
+        ctx.fillRect(hospital.x + 76, hospital.y + 86, 28, 8);
+    }
+
+    /* Señal de entrada */
+    ctx.fillStyle = "#fff8d9";
+    ctx.fillRect(454, 608, 92, 24);
+    ctx.fillStyle = "#247346";
+    ctx.font = "bold 13px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("ENTRADA", 500, 624);
+}
+
+function drawDog() {
+    if (dog.rescued) return;
+
+    if (images.dog && images.dog.complete && images.dog.naturalWidth > 0) {
+        ctx.drawImage(images.dog, dog.x, dog.y, dog.w, dog.h);
+    } else {
+        ctx.font = "43px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("🐶", dog.x + dog.w / 2, dog.y + 39);
+    }
+
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(dog.x - 12, dog.y - 22, dog.w + 24, 19);
+    ctx.fillStyle = "#a12828";
+    ctx.font = "bold 12px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("¡AYUDA!", dog.x + dog.w / 2, dog.y - 8);
+
+    /* Indicador visual para localizarlo fácilmente */
+    if (Math.floor(frameCounter / 25) % 2 === 0) {
+        ctx.strokeStyle = "#ffdc4a";
+        ctx.lineWidth = 3;
+        ctx.strokeRect(dog.x - 5, dog.y - 5, dog.w + 10, dog.h + 10);
+    }
+}
+
+function drawCar(car) {
+    ctx.fillStyle = "#0003";
+    ctx.fillRect(car.x + 3, car.y + car.h - 2, car.w, 7);
+
+    ctx.fillStyle = car.color;
+    ctx.fillRect(car.x, car.y + 7, car.w, car.h - 12);
+
+    ctx.fillStyle = "#252f35";
+    ctx.fillRect(car.x + 14, car.y, 17, 11);
+    ctx.fillRect(car.x + car.w - 31, car.y, 17, 11);
+    ctx.fillRect(car.x + 14, car.y + car.h - 7, 17, 11);
+    ctx.fillRect(car.x + car.w - 31, car.y + car.h - 7, 17, 11);
+
+    ctx.fillStyle = "#bde6f1";
+    ctx.fillRect(car.x + 22, car.y + 11, car.w - 44, car.h - 20);
+
+    ctx.fillStyle = "#fff5b4";
+    if (car.dir === 1) {
+        ctx.fillRect(car.x + car.w - 5, car.y + 12, 5, 7);
+        ctx.fillRect(car.x + car.w - 5, car.y + car.h - 16, 5, 7);
+    } else {
+        ctx.fillRect(car.x, car.y + 12, 5, 7);
+        ctx.fillRect(car.x, car.y + car.h - 16, 5, 7);
+    }
+}
+
+function drawPlayer() {
+    let img = images.doctor;
+
+    if (player.direction === "right") img = images.doctorRight;
+    if (player.direction === "left") img = images.doctorLeft;
+
+    // Dibuja directamente la imagen correspondiente a la dirección.
+    // No usa blinkBlend: esa variable no estaba declarada y provocaba
+    // un ReferenceError que detenía el renderizado del doctor y los vehículos.
+    if (img && img.complete && img.naturalWidth > 0) {
+        ctx.drawImage(img, player.x, player.y, player.w, player.h);
+    } else {
+        ctx.font = "43px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("🧑‍⚕️", player.x + player.w / 2, player.y + 45);
+    }
+
+    if (player.hasDog) {
+        if (images.healthyDog && images.healthyDog.complete && images.healthyDog.naturalWidth > 0) {
+            ctx.drawImage(
+                images.healthyDog,
+                player.x + 23,
+                player.y + 28,
+                34,
+                30
+            );
+        } else {
+            ctx.font = "24px Arial";
+            ctx.fillText("🐶", player.x + 43, player.y + 43);
+        }
+    }
+}
+
+function draw() {
+    drawBackground();
+
+    for (const house of houses) {
+        drawHouse(house);
+    }
+
+    drawHospital();
+    drawDog();
+
+    for (const car of cars) {
+        drawCar(car);
+    }
+
+    drawPlayer();
+}
+
+function updateHUD() {
+    livesElement.textContent = lives;
+
+    if (player.hasDog) {
+        statusElement.textContent = "🐶 ¡Perrito rescatado!";
+    } else {
+        statusElement.textContent = "Busca al perrito";
+    }
+}
+
+function rescueDog() {
+    dog.rescued = true;
+    player.hasDog = true;
+    statusElement.textContent = "¡Llévalo al hospital!";
+}
+
+function loseLife() {
+    if (player.invulnerable > 0 || !running) return;
+
+    lives--;
+    livesElement.textContent = lives;
+
+    if (lives <= 0) {
+        endGame(false);
+        return;
+    }
+
+    player.x = playerStart.x;
+    player.y = playerStart.y;
+    player.invulnerable = 100;
+
+    // Si pierde una vida mientras lleva al perrito, debe dejarlo atrás.
+    // El perrito vuelve a su lugar original y hay que rescatarlo otra vez.
+    if (player.hasDog) {
+        player.hasDog = false;
+        dog.rescued = false;
+        dog.x = 700;
+        dog.y = 45;
+    }
+
+    statusElement.textContent = player.hasDog
+        ? "¡Cuidado con los carros!"
+        : "Perdiste una vida. ¡Vuelve a rescatar al perrito!";
+}
+
+function endGame(won) {
+    running = false;
+    gameWon = won;
+
+    if (animationId !== null) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
+
+    overlay.style.display = "flex";
+
+    if (won) {
+        overlayTitle.textContent = "¡NIVEL 1 SUPERADO!";
+        overlayText.textContent =
+            "¡Nivel 1 superado! Rescataste al perrito. ¡Has pasado al Nivel 2: Atención animal! Ahora deberás memorizar y ordenar correctamente los pasos de la operación.";
+        startButton.textContent = "ENTRAR AL NIVEL 2";
+        localStorage.setItem(LEVEL1_CLEAR_KEY, "true");
+        localStorage.setItem(LEVEL2_UNLOCK_KEY, "true");
+        localStorage.setItem("zootopolis_progreso_nivel2_v2", "true");
+        statusElement.textContent = "Perrito en urgencias";
+        // Tras el anuncio, entrar automáticamente a la sala de tratamiento.
+        if (roomTransitionTimer !== null) clearTimeout(roomTransitionTimer);
+        roomTransitionTimer = setTimeout(showHospitalRoom, 2600);
+    } else {
+        overlayTitle.textContent = "¡MISIÓN FALLIDA!";
+        overlayText.textContent =
+            "No salvaste al perrito. Te quedaste sin vidas. Inténtalo de nuevo y esquiva los vehículos para llegar al hospital.";
+        startButton.textContent = "REINTENTAR NIVEL 1";
+        statusElement.textContent = "Juego terminado";
+    }
+}
+
+function refreshLevelLocks(){
+ if(typeof window.refreshZootopolisLocks === "function") window.refreshZootopolisLocks();
+}
+
+
+
+const memoryNames=["Evaluar signos vitales","Limpiar la herida","Aplicar anestesia","Estabilizar con férula","Administrar medicamento","Colocar vendaje"];
+let memoryIndex=0, memoryStarted=false, memoryTimer=null;
+function beginMemoryChallenge(){
+ const seq=document.getElementById("memorySequence"), choices=document.getElementById("memoryChoices"), feedback=document.getElementById("memoryFeedback");
+ if(!seq || memoryStarted) return;
+ memoryStarted=true; memoryIndex=0;
+ const instruction=document.getElementById("memoryInstruction");
+ instruction.textContent="Memoriza el orden correcto. Tienes 12 segundos.";
+ choices.style.display="none"; feedback.textContent="";
+ seq.innerHTML=memoryNames.map((n,i)=>`<span style="padding:9px 12px;border:2px solid #dba85b;border-radius:12px;background:linear-gradient(#f5d48a,#c58b43);color:#45290f;font-weight:900">${i+1}. ${n}</span>`).join("");
+ if(memoryTimer) clearTimeout(memoryTimer);
+ memoryTimer=setTimeout(()=>{
+   seq.innerHTML=""; instruction.textContent="Ahora selecciona las acciones en el mismo orden."; choices.style.display="flex";
+   const shuffled=[...memoryNames].sort(()=>Math.random()-.5);
+   choices.innerHTML=shuffled.map(n=>`<button type="button" class="memoryChoice" data-name="${n}" style="padding:10px 12px;border:2px solid #dba85b;border-radius:12px;background:linear-gradient(135deg,#315c3a,#1c3c2b);color:white;font-weight:800;cursor:pointer">${n}</button>`).join("");
+   choices.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+     if(b.dataset.name!==memoryNames[memoryIndex]){
+       feedback.textContent="❌ Orden incorrecto. La operación no se aprueba. Vuelve a memorizar."; feedback.style.color="#ff8b8b";
+       choices.style.display="none"; seq.innerHTML=""; memoryStarted=false; memoryIndex=0;
+       memoryTimer=setTimeout(beginMemoryChallenge,1400); return;
+     }
+     b.disabled=true; b.style.background="linear-gradient(135deg,#15803d,#22c55e)"; b.textContent="✓ "+b.textContent; memoryIndex++;
+     if(memoryIndex===memoryNames.length){
+       choices.style.display="none"; feedback.textContent="¡Secuencia correcta! Observa cómo se completa la atención veterinaria…"; feedback.style.color="#8df5ae";
+       instruction.textContent="Operación en curso: la ilustración mostrará cada etapa automáticamente.";
+       playTreatmentAnimation();
+     }
+   }));
+ },12000);
+}
+function playTreatmentAnimation(){
+ const stage=document.getElementById("legStage"), number=document.getElementById("visualStepNumber"), title=document.getElementById("visualStepTitle"), desc=document.getElementById("visualStepDesc"), label=document.getElementById("instrumentLabel");
+ const feedback=document.getElementById("memoryFeedback");
+ const titles=["Evaluación inicial","Limpieza de la zona","Anestesia simulada","Estabilización de la pata","Medicación registrada","Vendaje final"];
+ const descs=["Los signos vitales del paciente se revisan en el monitor.","La zona alrededor de la lesión queda preparada.","La jeringa representa la anestesia dentro de esta simulación.","La férula virtual estabiliza la pata lesionada.","Se representa la administración virtual del medicamento.","La venda cubre la pata: la atención animal ha terminado."];
+ let step=0;
+ function next(){
+   stage.dataset.step=String(step+1); number.textContent=`ETAPA ${step+1} DE 6`; title.textContent=titles[step]; desc.textContent=descs[step]; label.textContent=titles[step].toUpperCase();
+   document.querySelectorAll("[data-visual-check]").forEach(el=>{const done=Number(el.dataset.visualCheck)<=step;el.classList.toggle("done",done);const span=el.querySelector("span");if(span)span.textContent=done?"✓":"•";});
+   step++;
+   if(step<6){memoryTimer=setTimeout(next,1700);}
+   else{
+     localStorage.setItem(LEVEL3_UNLOCK_KEY,"true");
+     localStorage.setItem("zootopolis_progreso_nivel3_v2","true");
+     feedback.textContent="✅ ¡Nivel 2 superado! El nivel 3: Cuidado y recuperación está desbloqueado.";
+     document.getElementById("memoryInstruction").textContent="¡Muy bien! Ya puedes continuar al siguiente nivel.";
+     level2Button.disabled=false; level2Button.textContent="🌿 CONTINUAR AL NIVEL 3 →";
+     document.getElementById("doorHint").textContent="Has completado correctamente el reto de memoria y la simulación de la operación.";
+     document.querySelector(".roomSubtitle").textContent="¡Nivel 2 superado! Atención animal completada. Puedes continuar a Cuidado y recuperación.";
+     refreshLevelLocks();
+   }
+ }
+ next();
+}
+
+function showHospitalRoom() {
+    if (roomTransitionTimer !== null) {
+        clearTimeout(roomTransitionTimer);
+        roomTransitionTimer = null;
+    }
+    running = false;
+    if (animationId !== null) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
+    overlay.style.display = "none";
+    gamePanel.style.display = "none";
+    document.querySelector("h1").style.display = "none";
+    document.getElementById("hospitalRoom").style.display = "block";
+    beginMemoryChallenge();
+    document.getElementById("instructions").style.display = "none";
+}
+
+function update() {
+    if (!running) return;
+
+    frameCounter++;
+
+    let dx = 0;
+    let dy = 0;
+
+    if (keys.up) dy -= player.speed;
+    if (keys.down) dy += player.speed;
+    if (keys.left) dx -= player.speed;
+    if (keys.right) dx += player.speed;
+
+    if (dx !== 0 && dy !== 0) {
+        dx *= 0.7071;
+        dy *= 0.7071;
+    }
+
+    if (dx > 0) player.direction = "right";
+    if (dx < 0) player.direction = "left";
+    if (dy < 0) player.direction = "up";
+    if (dy > 0) player.direction = "down";
+
+    const nextX = player.x + dx;
+    const nextY = player.y + dy;
+
+    if (dx !== 0 && canMoveTo(nextX, player.y)) {
+        player.x = nextX;
+    }
+
+    if (dy !== 0 && canMoveTo(player.x, nextY)) {
+        player.y = nextY;
+    }
+
+    if (player.invulnerable > 0) {
+        player.invulnerable--;
+    }
+
+    /* Movimiento de los vehículos */
+    for (const car of cars) {
+        car.x += car.speed * car.dir;
+
+        if (car.dir === 1 && car.x > WIDTH + 30) {
+            car.x = -car.w - Math.random() * 250;
+        }
+
+        if (car.dir === -1 && car.x + car.w < -30) {
+            car.x = WIDTH + Math.random() * 250;
+        }
+
+        const carHitbox = {
+            x: car.x + 5,
+            y: car.y + 5,
+            w: car.w - 10,
+            h: car.h - 8
+        };
+
+        if (rectsOverlap(playerHitbox(), carHitbox)) {
+            loseLife();
+            if (!running) return;
+        }
+    }
+
+    /* Recoger al perrito */
+    if (!dog.rescued && rectsOverlap(playerHitbox(), dog)) {
+        rescueDog();
+    }
+
+    /*
+     * ENTREGA SOLO POR CONTACTO REAL CON EL HOSPITAL.
+     * Se comprueba el rectángulo visible del doctor (no su hitbox reducida),
+     * por lo que tocar el borde del edificio basta, pero estar cerca no.
+     */
+    const playerVisualBox = { x: player.x, y: player.y, w: player.w, h: player.h };
+    if (player.hasDog && rectsOverlap(playerVisualBox, hospital)) {
+        endGame(true);
+        return;
+    }
+
+    updateHUD();
+}
+
+function gameLoop(timestamp) {
+    if (!running) {
+        animationId = null;
+        return;
+    }
+
+    if (!lastTime) lastTime = timestamp;
+
+    const elapsed = timestamp - lastTime;
+    lastTime = timestamp;
+
+    /*
+     * Mantiene una velocidad estable en distintos equipos.
+     * Se limita el salto de tiempo para evitar movimientos bruscos.
+     */
+    const steps = Math.min(2, Math.max(1, Math.round(elapsed / 16.67)));
+
+    for (let i = 0; i < steps; i++) {
+        update();
+        if (!running) break;
+    }
+
+    draw();
+
+    if (running) {
+        animationId = requestAnimationFrame(gameLoop);
+    } else {
+        animationId = null;
+    }
+}
+
+function resetGame() {
+    if (roomTransitionTimer !== null) {
+        clearTimeout(roomTransitionTimer);
+        roomTransitionTimer = null;
+    }
+    hospitalRoom.style.display = "none";
+    gamePanel.style.display = "block";
+    document.querySelector("h1").style.display = "";
+    document.getElementById("instructions").style.display = "";
+    if (animationId !== null) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
+
+    lives = 3;
+    completedProcedureSteps = 0;
+    updateTreatmentVisual(0);
+    updateProcedureUI();
+    running = true;
+    gameWon = false;
+    lastTime = 0;
+    frameCounter = 0;
+
+    player.x = playerStart.x;
+    player.y = playerStart.y;
+    player.direction = "up";
+    player.hasDog = false;
+    player.invulnerable = 0;
+
+    dog.x = 700;
+    dog.y = 45;
+    dog.rescued = false;
+
+    for (const key in keys) {
+        keys[key] = false;
+    }
+
+    createCars();
+    updateHUD();
+
+    overlay.style.display = "none";
+    draw();
+
+    animationId = requestAnimationFrame(gameLoop);
+}
+
+startButton.addEventListener("click", () => {
+    if (gameWon) {
+        showHospitalRoom();
+    } else {
+        resetGame();
+    }
+});
+
+level2Button.addEventListener("click", () => {
+    if (localStorage.getItem(LEVEL3_UNLOCK_KEY) !== "true") return;
+    document.getElementById("lobitScreen").style.display = "none";
+    document.getElementById("level1Screen").style.display = "none";
+    document.getElementById("level3Screen").style.display = "block";
+    window.scrollTo(0,0);
+});
+document.getElementById("backFromLevel3").addEventListener("click",()=>{
+ document.getElementById("level3Screen").style.display="none";
+ document.getElementById("lobitScreen").style.display="flex";
+ refreshLevelLocks(); window.scrollTo(0,0);
+});
+
+/* =====================================================
+   MONITOR DE SIGNOS VITALES EN BUCLE
+   Los valores son animaciones ficticias para el videojuego,
+   no mediciones clínicas reales.
+   ===================================================== */
+function startVitalMonitor() {
+    if (vitalMonitorTimer !== null) clearInterval(vitalMonitorTimer);
+    const heart = document.getElementById("heartRate");
+    const oxygen = document.getElementById("oxygenRate");
+    vitalMonitorTimer = setInterval(() => {
+        if (!heart || !oxygen) return;
+        heart.textContent = String(88 + Math.floor(Math.random() * 11));
+        oxygen.textContent = String(97 + Math.floor(Math.random() * 3));
+    }, 1300);
+}
+startVitalMonitor();
+
+/* =====================================================
+   TRATAMIENTO INTERACTIVO POR ORDEN
+   El Nivel 2 solo se desbloquea al completar los 6 pasos.
+   ===================================================== */
+const procedureActions = [
+    "Signos vitales revisados. El paciente está listo para el procedimiento.",
+    "Herida limpiada. La zona está preparada para la atención.",
+    "Inyección aplicada en esta simulación. Puedes estabilizar la pata.",
+    "Fractura estabilizada con una férula virtual.",
+    "Medicamento administrado en el juego. Solo falta el vendaje.",
+    "¡Tratamiento completado! El perrito queda atendido y el Nivel 2 se desbloqueó en el Lobit."
+];
+
+const visualProcedureStates = [
+ {title:"Evaluación inicial",desc:"Los signos vitales están monitorizados. Se prepara el área para limpiar y revisar la pata lesionada.",label:"SIGNOS VITALES VERIFICADOS"},
+ {title:"Limpieza de la zona",desc:"Se limpia suavemente el área alrededor de la lesión. El brillo turquesa representa la zona preparada en esta simulación.",label:"ZONA LIMPIA Y PREPARADA"},
+ {title:"Anestesia simulada",desc:"La jeringa animada representa la aplicación de anestesia dentro del juego. No es una guía para realizar procedimientos reales.",label:"APLICACIÓN SIMULADA"},
+ {title:"Estabilización de la pata",desc:"Aparecen dos soportes laterales para representar la férula que mantiene la pata inmóvil durante la recuperación.",label:"FÉRULA VIRTUAL COLOCADA"},
+ {title:"Medicación registrada",desc:"La gota animada representa la administración virtual del medicamento y la confirmación de esta etapa del juego.",label:"MEDICACIÓN REGISTRADA"},
+ {title:"Vendaje final",desc:"La venda se dibuja alrededor de la pata y cubre la zona lesionada. El tratamiento visual queda completado.",label:"VENDAJE FINAL COMPLETADO"}
+];
+function updateTreatmentVisual(stepCount) {
+ const stage=document.getElementById("legStage");
+ if(!stage) return;
+ stage.dataset.step=String(stepCount);
+ const index=stepCount-1;
+ const state=index>=0?visualProcedureStates[index]:null;
+ document.getElementById("visualStepNumber").textContent=`PASO ${stepCount} DE 6`;
+ document.getElementById("visualStepTitle").textContent=state?state.title:"Preparación del paciente";
+ document.getElementById("visualStepDesc").textContent=state?state.desc:"Comienza revisando los signos vitales. La ilustración cambiará después de cada acción validada para mostrar el avance del tratamiento.";
+ document.getElementById("instrumentLabel").textContent=state?state.label:"PACIENTE LISTO PARA EVALUACIÓN";
+ document.querySelectorAll("[data-visual-check]").forEach(item=>{
+   const i=Number(item.dataset.visualCheck),done=i<stepCount;
+   item.classList.toggle("done",done);
+   item.querySelector("span").textContent=done?"✓":"•";
+ });
+}
+
+function updateProcedureUI() {
+    const items = document.querySelectorAll(".procedureStep");
+    items.forEach((item, index) => {
+        const button = item.querySelector(".stepAction");
+        const check = item.querySelector(".stepCheck");
+        const done = index < completedProcedureSteps;
+        item.classList.toggle("completed", done);
+        item.classList.toggle("activeStep", index === completedProcedureSteps && !done);
+        item.classList.toggle("lockedStep", index > completedProcedureSteps);
+        check.textContent = done ? "✓" : "○";
+        button.disabled = done || index !== completedProcedureSteps;
+        button.textContent = done ? "Completado" : ["Evaluar", "Limpiar", "Aplicar", "Estabilizar", "Medicar", "Vendar"][index];
+    });
+    document.getElementById("procedureCount").textContent = String(completedProcedureSteps);
+    updateTreatmentVisual(completedProcedureSteps);
+    const progressFill = document.getElementById("procedureProgressFill");
+    const progressTrack = document.getElementById("procedureProgressTrack");
+    if (progressFill) progressFill.style.width = `${(completedProcedureSteps / 6) * 100}%`;
+    if (progressTrack) progressTrack.setAttribute("aria-valuenow", String(completedProcedureSteps));
+    const done = completedProcedureSteps === 6;
+    level2Button.disabled = !done;
+    level2Button.textContent = done ? "🚪 PASAR AL NIVEL 2 →" : "🔒 COMPLETA EL TRATAMIENTO PARA DESBLOQUEAR EL NIVEL 2";
+    document.getElementById("doorHint").textContent = done
+        ? "¡Atención animal completada! El Nivel 3: Cuidado y recuperación queda como próximo desafío."
+        : "Completa los seis pasos en el orden correcto para superar Atención animal y preparar el Nivel 3: Cuidado y recuperación.";
+}
+
+// El avance del Nivel 2 se controla exclusivamente con el reto de memoria.
+
+// La navegación de niveles se registra una sola vez en el bloque final integrado.
+refreshLevelLocks();
+
+/* Teclado */
+window.addEventListener("keydown", event => {
+    const key = event.key.toLowerCase();
+
+    const controls = {
+        arrowup: "up",
+        w: "up",
+        arrowdown: "down",
+        s: "down",
+        arrowleft: "left",
+        a: "left",
+        arrowright: "right",
+        d: "right"
+    };
+
+    if (controls[key]) {
+        keys[controls[key]] = true;
+        event.preventDefault();
+    }
+});
+
+window.addEventListener("keyup", event => {
+    const key = event.key.toLowerCase();
+
+    const controls = {
+        arrowup: "up",
+        w: "up",
+        arrowdown: "down",
+        s: "down",
+        arrowleft: "left",
+        a: "left",
+        arrowright: "right",
+        d: "right"
+    };
+
+    if (controls[key]) {
+        keys[controls[key]] = false;
+        event.preventDefault();
+    }
+});
+
+/* Controles táctiles */
+function bindTouchButton(id, direction) {
+    const button = document.getElementById(id);
+
+    button.addEventListener("pointerdown", event => {
+        event.preventDefault();
+        keys[direction] = true;
+        button.setPointerCapture?.(event.pointerId);
+    });
+
+    const release = event => {
+        event.preventDefault();
+        keys[direction] = false;
+    };
+
+    button.addEventListener("pointerup", release);
+    button.addEventListener("pointercancel", release);
+    button.addEventListener("lostpointercapture", () => {
+        keys[direction] = false;
+    });
+}
+
+bindTouchButton("up", "up");
+bindTouchButton("down", "down");
+bindTouchButton("left", "left");
+bindTouchButton("right", "right");
+
+/* Pantalla inicial */
+createCars();
+draw();
+
+</script>
+<script>
+// Navegación integrada y estados de desbloqueo versionados.
+(function(){
+  const KEY2 = "zootopolis_nivel2_desbloqueado_v3";
+  const KEY1 = "zootopolis_nivel1_rescate_ok_v3";
+  const KEY3 = "zootopolis_nivel3_desbloqueado_v3";
+  const KEY4 = "zootopolis_nivel4_desbloqueado_v1";
+  const KEY5 = "zootopolis_nivel5_desbloqueado_v1";
+  const PROGRESS2 = "zootopolis_progreso_nivel2_v2";
+  const PROGRESS3 = "zootopolis_progreso_nivel3_v2";
+  const PROGRESS4 = "zootopolis_progreso_nivel4_v2";
+  const PROGRESS5 = "zootopolis_progreso_nivel5_v2";
+  const lobit = document.getElementById('lobitScreen');
+  const level1 = document.getElementById('level1Screen');
+  const level3 = document.getElementById('level3Screen');
+  const status = document.getElementById('estadoNiveles');
+  const levelLinks = document.querySelectorAll('#lobitScreen .nivel');
+  function unlocked(n){
+    if(n===1) return true;
+    if(n===2) return localStorage.getItem(PROGRESS2)==='true';
+    if(n===3) return localStorage.getItem(PROGRESS3)==='true';
+    if(n===4) return localStorage.getItem(PROGRESS4)==='true';
+    if(n===5) return localStorage.getItem(PROGRESS5)==='true';
+    return false;
+  }
+  function refreshLevels(){
+    levelLinks.forEach(link=>{
+      const n=Number(link.dataset.nivel), available=unlocked(n);
+      link.classList.toggle('bloqueado',!available);
+      const lock=link.querySelector('.candado');
+      if(lock) lock.style.display=available?'none':'flex';
+      link.setAttribute('aria-label',available?`Jugar nivel ${n}`:`Nivel ${n} bloqueado`);
+      link.href=available?`#nivel${n}`:'#';
+    });
+    status.textContent=unlocked(5)
+      ? '¡Todos los niveles desbloqueados! Has llegado a la misión final de liberación.'
+      : unlocked(4)
+        ? 'Niveles 1, 2, 3 y 4 disponibles. Completa el rescate del hospital para desbloquear el nivel 5.'
+        : unlocked(3)
+          ? 'Niveles 1, 2 y 3 disponibles. Completa el reto de la nutria para desbloquear el nivel 4.'
+          : unlocked(2)
+            ? 'Niveles 1 y 2 disponibles. Completa la operación y el reto de memoria para desbloquear el nivel 3.'
+            : 'Solo el nivel 1 está disponible. Rescata al perrito para desbloquear el nivel 2.';
+  }
+  levelLinks.forEach(link=>link.addEventListener('click',event=>{
+    event.preventDefault(); const n=Number(link.dataset.nivel);
+    if(!unlocked(n)){status.textContent='🔒 Nivel bloqueado. Completa el nivel anterior para continuar.';return;}
+    if(n===1){lobit.style.display='none';level1.style.display='block';level3.style.display='none';document.getElementById('hospitalRoom').style.display='none';document.getElementById('gamePanel').style.display='block';document.querySelector('#level1Screen h1').style.display='block';resetGame();}
+    if(n===2){lobit.style.display='none';level1.style.display='block';level3.style.display='none';showHospitalRoom();}
+    if(n===3){lobit.style.display='none';level1.style.display='none';level3.style.display='block';startMazeLevel();}
+    if(n===4){lobit.style.display='none';level1.style.display='none';level3.style.display='none';document.getElementById('level4Screen').style.display='block';document.getElementById('level5Screen').style.display='none';if(window.startOtterLevel)window.startOtterLevel();}
+    if(n===5){lobit.style.display='none';level1.style.display='none';level3.style.display='none';document.getElementById('level4Screen').style.display='none';document.getElementById('level5Screen').style.display='block';if(window.startRescueLevel5)window.startRescueLevel5();}
+    window.scrollTo(0,0);
+  }));
+  const back=document.getElementById('backToLobit');
+  if(back) back.addEventListener('click',event=>{
+    event.preventDefault();
+    if(typeof roomTransitionTimer!=='undefined'&&roomTransitionTimer!==null)clearTimeout(roomTransitionTimer);
+    if(typeof vitalMonitorTimer!=='undefined'&&vitalMonitorTimer!==null)clearInterval(vitalMonitorTimer);
+    level1.style.display='none';level3.style.display='none';lobit.style.display='flex';refreshLevels();window.scrollTo(0,0);
+  });
+  window.refreshZootopolisLocks=refreshLevels;
+  refreshLevels(); window.addEventListener('pageshow',refreshLevels);
+})();
+</script>
+
+<script>
+/* Juego del laberinto: Nivel 3. Usa los mismos recursos originales del doctor y hospital. */
+(function(){
+ const c=document.getElementById('mazeCanvas'); if(!c)return; const g=c.getContext('2d');
+ const W=960,H=600,C=40,cols=24,rows=15;
+ const doctorImgs={down:new Image(),left:new Image(),right:new Image(),closed:new Image()};
+ const doctorPowerImg=new Image();doctorPowerImg.src='https://i.ibb.co/cS580PQF/doctor-poderes.png';
+ doctorImgs.down.src='https://i.ibb.co/rRndZ3k8/CENTRO.png'; doctorImgs.left.src='https://i.ibb.co/7d7XYNmZ/Doctor-izquierda.png'; doctorImgs.right.src='https://i.ibb.co/KRWWzs1/Doctor-derecha.png'; doctorImgs.closed.src='https://i.ibb.co/7xM5KvjQ/doctor-ojos-cerrados.png';
+ const rabbit=new Image();rabbit.src='https://i.ibb.co/Ld4VgKDC/conejo-desnutrido.png';
+ const hospitalImg=new Image();hospitalImg.src='https://i.ibb.co/8LryLL4N/hospital.png';
+ const recoveredRabbit=new Image();recoveredRabbit.src='https://i.ibb.co/1JvNY1wP/conejo-bien.png';
+ const supplyDefs=[{id:'serum',label:'Suero hidratante',src:'https://i.ibb.co/NDMp5Mg/suero-hidratante.png',img:new Image()},{id:'pain',label:'Analgésicos',src:'https://i.ibb.co/bjY4KRtd/analgesicos.png',img:new Image()},{id:'carrot',label:'Zanahorias',src:'https://i.ibb.co/WhpNDvG/Mejora-de-logo-y-fondo-4.png',img:new Image()}];
+ supplyDefs.forEach(item=>item.img.src=item.src);
+ [doctorImgs.down,doctorImgs.left,doctorImgs.right,doctorImgs.closed,doctorPowerImg,rabbit,hospitalImg,recoveredRabbit,...supplyDefs.map(item=>item.img)].forEach(img=>{img.onload=()=>{if(running)draw();};img.onerror=()=>console.warn('No se pudo cargar un recurso gráfico del nivel 3:',img.src);});
+ const floorImg=new Image();
+ floorImg.onload=()=>{if(running)draw();};
+ floorImg.onerror=()=>console.warn('No se pudo cargar el piso personalizado del nivel 3.');
+ floorImg.src='https://i.ibb.co/3mKryrPs/piso-nivel-3.png';
+ const wallTileImg=new Image();
+ wallTileImg.onload=()=>{if(running)draw();};
+ wallTileImg.onerror=()=>console.warn('No se pudo cargar la imagen personalizada de los muros del nivel 3.');
+ wallTileImg.src='https://i.ibb.co/LzY8tcBj/Mejora-de-logo-y-fondo-3.png';
+ // Cada celda es corredor o pared. Varias ramas conectan el inicio con el hospital.
+ const map=[
+ '########################','#S....#.....#.....#.....#','###.#.#.###.#.###.#.###.#','#...#...#...#...#...#...#','#.#####.#.#####.###.#.###','#.....#.#.....#.....#...#','#.###.#.#####.#####.###.#','#...#.#.....#.....#.....#','###.#.#####.#.###.#####.#','#...#.....#...#...#.....#','#.#####.#.#####.#.###.###','#.....#.#.....#.#...#...#','#.###.#.#####.#.###.###.#','#...#.........#......R.H#','########################'];
+ let walls=[],player={x:1.5*C,y:1.5*C,w:28,h:36,dir:'down'},bunny={x:0,y:0,got:false},hospital={x:0,y:0},trolls=[],bullets=[],pickups=[],inventory={serum:0,pain:0,carrot:0},keys={},lives=3,time=240,running=false,hasWon=false,raf=0,last=0,elapsed=0,trollDelay=2.5,hitCooldown=0,nextSpawn=3.5,spawnCount=0,shotCooldown=0,powerPoseTimer=0,gates=[],gateNotice='',nextItemSpawn=2,itemSpawnCount=0;
+ const $=id=>document.getElementById(id); const overlay=$('mazeOverlay'); const overlayInitialHTML=overlay.innerHTML;
+ for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){const ch=(map[y]||'')[x]||'#';if(ch==='#')walls.push({x:x*C,y:y*C,w:C,h:C});if(ch==='R')bunny={x:x*C+5,y:y*C+3,got:false};if(ch==='H')hospital={x:x*C,y:y*C,w:C,h:C};}
+ // Ensure rabbit/hospital at clear, reachable end cells.
+ bunny={x:20*C+5,y:13*C+3,got:false}; hospital={x:1*C,y:1*C,w:40,h:40};
+ function activeGates(){if(!gates.length)return [];const phase=elapsed%8;if(phase>=3.5)return [];return [gates[Math.floor(elapsed/8)%gates.length]];}
+ function collides(x,y,w,h){const overlaps=(a,inset)=>x<a.x+a.w-inset&&x+w>a.x+inset&&y<a.y+a.h-inset&&y+h>a.y+inset;return walls.some(a=>overlaps(a,5))||activeGates().some(a=>overlaps(a,0));}
+ function resetPlayer(){player={x:1.5*C-14,y:1.5*C-18,w:28,h:36,dir:'down'};}
+ function start(){if(overlay.querySelector('.treatmentCard'))overlay.innerHTML=overlayInitialHTML;cancelAnimationFrame(raf);walls=[];for(let y=0;y<rows;y++)for(let x=0;x<cols;x++)if(((map[y]||'')[x]||'#')==='#')walls.push({x:x*C,y:y*C,w:C,h:C});gates=[{x:5,y:1},{x:11,y:3},{x:5,y:5},{x:9,y:7},{x:3,y:9},{x:15,y:11}].map(p=>({x:p.x*C,y:p.y*C,w:C,h:C,gx:p.x,gy:p.y}));lives=3;time=240;running=true;hasWon=false;elapsed=0;hitCooldown=0;bunny.got=false;spawnCount=0;nextSpawn=3.5;shotCooldown=0;powerPoseTimer=0;bullets=[];pickups=[];inventory={serum:0,pain:0,carrot:0};nextItemSpawn=2;itemSpawnCount=0;updateInventoryHUD();trolls=[{x:21*C,y:1*C,active:false,speed:92,initial:true}];resetPlayer();keys={};$('mazeLives').textContent=lives;$('mazeTimer').textContent='04:00';$('mazeStatus').textContent='Recolecta 5 sueros, 5 analgésicos y 5 zanahorias.';overlay.classList.add('hidden');last=performance.now();raf=requestAnimationFrame(loop);}
+ function drawImageFit(img,x,y,w,h,fallback){if(img.complete&&img.naturalWidth){g.drawImage(img,x,y,w,h)}else{g.font='30px serif';g.textAlign='center';g.fillText(fallback,x+w/2,y+h/2+10)}}
+ function drawImageContained(img,x,y,w,h,fallback){if(img.complete&&img.naturalWidth){const scale=Math.min(w/img.naturalWidth,h/img.naturalHeight),dw=img.naturalWidth*scale,dh=img.naturalHeight*scale;g.drawImage(img,x+(w-dw)/2,y+(h-dh)/2,dw,dh)}else{g.font='30px serif';g.textAlign='center';g.textBaseline='middle';g.fillText(fallback,x+w/2,y+h/2);g.textBaseline='alphabetic'}}
+ function drawImageSquareCrop(img,x,y,size,fallback){if(img.complete&&img.naturalWidth){const side=Math.min(img.naturalWidth,img.naturalHeight),sx=(img.naturalWidth-side)/2,sy=(img.naturalHeight-side)/2;g.save();g.beginPath();g.rect(x,y,size,size);g.clip();g.drawImage(img,sx,sy,side,side,x,y,size,size);g.restore()}else{g.font='42px serif';g.textAlign='center';g.textBaseline='middle';g.fillText(fallback,x+size/2,y+size/2);g.textBaseline='alphabetic'}}
+ function draw(){g.clearRect(0,0,W,H);
+ // Piso personalizado del nivel 3, ocupando todo el tablero.
+ if(floorImg.complete&&floorImg.naturalWidth){g.drawImage(floorImg,0,0,W,H)}else{g.fillStyle='#294b30';g.fillRect(0,0,W,H)}
+ // Cada muro usa la imagen cuadrada indicada, ajustada a la celda del laberinto.
+ walls.forEach(a=>{
+   if(wallTileImg.complete&&wallTileImg.naturalWidth){g.drawImage(wallTileImg,a.x,a.y,C,C)}
+   else {g.fillStyle='#287443';g.fillRect(a.x,a.y,C,C);g.strokeStyle='#9ac56d';g.lineWidth=2;g.strokeRect(a.x+2,a.y+2,C-4,C-4)}
+ });
+ // Barreras temporales: una puerta de corredor se cierra y vuelve a abrirse periódicamente.
+ const closedGates=activeGates();
+ gates.forEach(gate=>{if(closedGates.includes(gate)){g.fillStyle='#8b352d';g.fillRect(gate.x+3,gate.y+3,C-6,C-6);g.strokeStyle='#ffd36c';g.lineWidth=4;for(let bx=gate.x+8;bx<gate.x+C-4;bx+=9){g.beginPath();g.moveTo(bx,gate.y+5);g.lineTo(bx,gate.y+C-5);g.stroke()}g.strokeStyle='#ffe9a5';g.lineWidth=2;g.strokeRect(gate.x+3,gate.y+3,C-6,C-6)}});
+ // El hospital está en la casilla inicial del doctor; el conejo se rescata en el extremo opuesto.
+ g.fillStyle='#e9c76e';g.font='bold 12px sans-serif';g.textAlign='center';g.fillText('INICIO',60,55);
+ drawImageSquareCrop(hospitalImg,hospital.x-18,hospital.y-18,76, '🏥');
+ if(!bunny.got)drawImageContained(rabbit,bunny.x-13,bunny.y-15,62,62,'🐰');
+ pickups.forEach(item=>{const def=supplyDefs.find(d=>d.id===item.type);if(def)drawImageContained(def.img,item.x-2,item.y-2,28,28,item.type==='serum'?'💧':item.type==='pain'?'💊':'🥕');g.save();g.strokeStyle='#fff';g.lineWidth=1.5;g.beginPath();g.arc(item.x+12,item.y+12,15,0,Math.PI*2);g.stroke();g.restore();});
+ trolls.forEach(t=>{if(t.active){g.font='38px serif';g.textAlign='center';g.fillText('👹',t.x+18,t.y+32);}});
+ bullets.forEach(b=>{g.save();g.shadowColor='#7df9ff';g.shadowBlur=12;g.fillStyle='#8ffaff';g.beginPath();g.arc(b.x,b.y,7,0,Math.PI*2);g.fill();g.strokeStyle='#ffffff';g.lineWidth=2;g.stroke();g.restore();});
+ const img=powerPoseTimer>0&&doctorPowerImg.complete&&doctorPowerImg.naturalWidth?doctorPowerImg:(player.dir==='left'?doctorImgs.left:player.dir==='right'?doctorImgs.right:doctorImgs.down);drawImageContained(img,player.x-5,player.y-8,player.w+10,player.h+14,'🧑‍⚕️');
+ if(bunny.got)drawImageContained(rabbit,player.x+14,player.y+12,30,30,'🐰');
+ }
+ function updateInventoryHUD(){const ids={serum:'countSerum',pain:'countPain',carrot:'countCarrot'};Object.keys(ids).forEach(k=>{const el=$(ids[k]);if(el)el.textContent=inventory[k]+'/5';});}
+ function spawnSupply(){const type=supplyDefs[itemSpawnCount%supplyDefs.length].id;itemSpawnCount++;if(inventory[type]>=5||pickups.filter(p=>p.type===type).length>=4)return;const candidates=[];for(let y=1;y<rows-1;y++)for(let x=1;x<cols-1;x++){if(((map[y]||'')[x]||'#')==='#')continue;if(activeGates().some(a=>a.gx===x&&a.gy===y))continue;const px=x*C+6,py=y*C+6;if(Math.hypot(px-player.x,py-player.y)<95||Math.hypot(px-bunny.x,py-bunny.y)<25||Math.hypot(px-hospital.x,py-hospital.y)<48)continue;if(pickups.some(p=>Math.hypot(px-p.x,py-p.y)<38))continue;candidates.push({x:px,y:py});}if(!candidates.length)return;const pos=candidates[Math.floor(Math.random()*candidates.length)];pickups.push({x:pos.x,y:pos.y,type});}
+ function cellAt(px,py){return {x:Math.max(0,Math.min(cols-1,Math.floor(px/C))),y:Math.max(0,Math.min(rows-1,Math.floor(py/C)))};}
+ function findNextCell(sx,sy,tx,ty){
+   const startCell=cellAt(sx+14,sy+16), targetCell=cellAt(tx+14,ty+18);
+   const key=(x,y)=>x+','+y, queue=[startCell], prev=new Map(); prev.set(key(startCell.x,startCell.y),null);
+   const dirs=[[1,0],[-1,0],[0,1],[0,-1]]; let found=null;
+   while(queue.length){const cur=queue.shift();if(cur.x===targetCell.x&&cur.y===targetCell.y){found=cur;break;}
+     for(const [dx,dy] of dirs){const nx=cur.x+dx,ny=cur.y+dy,k=key(nx,ny);if(nx<0||ny<0||nx>=cols||ny>=rows||((map[ny]||'')[nx]||'#')==='#'||activeGates().some(gate=>gate.gx===nx&&gate.gy===ny)||prev.has(k))continue;prev.set(k,key(cur.x,cur.y));queue.push({x:nx,y:ny});}}
+   if(!found)return null; let cur=found, parent=prev.get(key(cur.x,cur.y)); while(parent&&parent!==key(startCell.x,startCell.y)){const [px,py]=parent.split(',').map(Number);cur={x:px,y:py};parent=prev.get(key(cur.x,cur.y));} return {x:cur.x*C+C/2-14,y:cur.y*C+C/2-16};
+ }
+ function moveEntity(ent,tx,ty,speed){const waypoint=findNextCell(ent.x,ent.y,tx,ty);if(!waypoint)return;let dx=waypoint.x-ent.x,dy=waypoint.y-ent.y,d=Math.hypot(dx,dy);if(d<1)return;const step=Math.min(speed,d),nx=ent.x+dx/d*step,ny=ent.y+dy/d*step;if(!collides(nx,ent.y,28,32))ent.x=nx;if(!collides(ent.x,ny,28,32))ent.y=ny;}
+ function loop(now){if(!running)return;let dt=Math.min((now-last)/1000,.05);last=now;elapsed+=dt;time-=dt;if(time<=0){time=0;finish(false,'⏱️ ¡Se acabó el tiempo! La misión falló.');return;}hitCooldown=Math.max(0,hitCooldown-dt);powerPoseTimer=Math.max(0,powerPoseTimer-dt);
+ let dx=0,dy=0;if(keys.left||keys.a)dx--;if(keys.right||keys.d)dx++;if(keys.up||keys.w)dy--;if(keys.down||keys.s)dy++;if(dx||dy){let mag=Math.hypot(dx,dy);dx/=mag;dy/=mag;player.dir=Math.abs(dx)>Math.abs(dy)?(dx<0?'left':'right'):(dy<0?'up':'down');let speed=185*dt;let nx=player.x+dx*speed,ny=player.y+dy*speed;if(!collides(nx,player.y,player.w,player.h))player.x=nx;if(!collides(player.x,ny,player.w,player.h))player.y=ny;}
+ if(!bunny.got&&Math.hypot(player.x-bunny.x,player.y-bunny.y)<34){bunny.got=true;$('mazeStatus').textContent='🐰 ¡Encontraste al conejo! Llévalo al hospital.';}
+ const initialTroll=trolls.find(t=>t.initial);if(initialTroll&&elapsed>=trollDelay)initialTroll.active=true;
+ const gatePhase=elapsed%8;const gateKey=Math.floor(elapsed/8)%gates.length;const currentGate=gates[gateKey];const gateMessage=gatePhase<3.5?'🚧 ¡Puerta cerrada! Espera a que se abra o busca otra ruta.':'✅ ¡La puerta está abierta! Avanza rápido.';if(gateMessage!==gateNotice){gateNotice=gateMessage;$('mazeStatus').textContent=gateMessage;}
+ if(elapsed>=nextItemSpawn){spawnSupply();nextItemSpawn=elapsed+2.4;}
+ for(const item of pickups){if(Math.hypot(player.x+player.w/2-(item.x+12),player.y+player.h/2-(item.y+12))<29&&inventory[item.type]<5){inventory[item.type]++;item.collected=true;updateInventoryHUD();$('mazeStatus').textContent='🎒 Recolectaste '+supplyDefs.find(d=>d.id===item.type).label+' ('+inventory[item.type]+'/5).';}}pickups=pickups.filter(item=>!item.collected);
+ if(elapsed>=nextSpawn&&trolls.length<10){
+   spawnCount++;
+   const spawnPoints=[{x:21*C,y:1*C},{x:18*C,y:7*C},{x:6*C,y:11*C},{x:13*C,y:3*C},{x:21*C,y:9*C}];
+   const point=spawnPoints[(spawnCount-1)%spawnPoints.length];
+   trolls.push({x:point.x,y:point.y,active:true,speed:88+Math.min(spawnCount*7,42)});
+   nextSpawn=elapsed+Math.max(1.5,4.2-spawnCount*0.35);
+   $('mazeStatus').textContent='¡Cuidado! Apareció otro troll y son más rápidos.';
+ }
+ shotCooldown=Math.max(0,shotCooldown-dt);
+ // Proyectiles: la tecla X dispara en la última dirección del doctor.
+ for(const b of bullets){b.x+=b.dx*b.speed*dt;b.y+=b.dy*b.speed*dt;b.life-=dt;
+   if(b.x<0||b.y<0||b.x>W||b.y>H||b.life<=0||collides(b.x-4,b.y-4,8,8)||activeGates().some(a=>b.x>=a.x&&b.x<=a.x+C&&b.y>=a.y&&b.y<=a.y+C)){b.dead=true;continue;}
+   for(const troll of trolls){if(troll.active&&Math.hypot(b.x-(troll.x+14),b.y-(troll.y+16))<25){troll.active=false;troll.dead=true;b.dead=true;$('mazeStatus').textContent='✨ ¡Poder activado! Eliminaste a un monstruo.';break;}}
+ }
+ bullets=bullets.filter(b=>!b.dead);trolls=trolls.filter(t=>!t.dead);
+ for(const troll of trolls){
+   if(!troll.active)continue;
+   const tx=player.x+(bunny.got?0:12),ty=player.y+(bunny.got?0:10);
+   moveEntity(troll,tx,ty,troll.speed*dt);
+   if(hitCooldown<=0&&Math.hypot(player.x-troll.x,player.y-troll.y)<32){
+     lives--;hitCooldown=1.4;$('mazeLives').textContent=lives;
+     if(lives<=0){finish(false,'👹 ¡Los trolls te alcanzaron y te quedaste sin vidas!');return;}
+     resetPlayer();bunny.got=false;$('mazeStatus').textContent='¡Un troll te atrapó! Volviste al inicio; rescata otra vez al conejo.';
+     break;
+   }
+ }
+ if(bunny.got&&player.x+player.w>hospital.x&&player.x<hospital.x+hospital.w&&player.y+player.h>hospital.y&&player.y<hospital.y+hospital.h){if(inventory.serum<5||inventory.pain<5||inventory.carrot<5){$('mazeStatus').textContent='🧺 Te faltan suministros: reúne 5 sueros, 5 analgésicos y 5 zanahorias.';}else{localStorage.setItem('zootopolis_nivel3_superado_v1','true');localStorage.setItem('zootopolis_nivel4_desbloqueado_v1','true');localStorage.setItem('zootopolis_progreso_nivel4_v2','true');finish(true,'🎉 ¡Rescate completado!');return;}}
+ $('mazeTimer').textContent=String(Math.floor(time/60)).padStart(2,'0')+':'+String(Math.floor(time%60)).padStart(2,'0');draw();raf=requestAnimationFrame(loop);}
+ function finish(win,msg){running=false;cancelAnimationFrame(raf);draw();overlay.classList.remove('hidden');if(win){overlay.innerHTML=`<div class="treatmentCard"><div class="missionEyebrow">ZOOTÓPOLIS · TRATAMIENTO COMPLETADO</div><h2>🐰 ¡El conejo está recuperado!</h2><img class="recoveredRabbit" src="https://i.ibb.co/1JvNY1wP/conejo-bien.png" alt="Conejo recuperado y saludable"><p>¡Excelente trabajo! Rescataste al paciente y reuniste todos los recursos necesarios para su recuperación.</p><div class="treatmentSteps"><div class="treatmentStep"><img src="https://i.ibb.co/NDMp5Mg/suero-hidratante.png" alt="Suero hidratante"><strong>1. Hidratación</strong><span>Se administra el suero para recuperar líquidos y energía. <b>${inventory.serum}/5</b> recolectados.</span></div><div class="treatmentStep"><img src="https://i.ibb.co/bjY4KRtd/analgesicos.png" alt="Analgésicos"><strong>2. Alivio del dolor</strong><span>Se suministran los analgésicos para ayudar a aliviar el dolor. <b>${inventory.pain}/5</b> recolectados.</span></div><div class="treatmentStep"><img src="https://i.ibb.co/WhpNDvG/Mejora-de-logo-y-fondo-4.png" alt="Zanahorias"><strong>3. Alimentación</strong><span>Se alimenta al conejo con zanahorias para apoyar su recuperación. <b>${inventory.carrot}/5</b> recolectadas.</span></div></div><div class="treatmentComplete">✅ Paciente hidratado, atendido y alimentado · 🔓 Nivel 4 desbloqueado</div><p><button type="button" id="treatmentBackButton">← VOLVER AL LOBIT</button></p></div>`;const back=document.getElementById('treatmentBackButton');back.onclick=()=>{document.getElementById('level3Screen').style.display='none';document.getElementById('lobitScreen').style.display='flex';document.getElementById('level4Screen').style.display='none';window.dispatchEvent(new Event('pageshow'));};return;}$('mazeOverlayTitle').textContent='🐾 MISIÓN NO COMPLETADA';$('mazeOverlayText').textContent=msg+' Puedes volver al Lobit o intentarlo de nuevo.';$('mazeStartButton').textContent='REINTENTAR NIVEL 3';$('mazeStartButton').onclick=()=>start();}
+ $('mazeStartButton').onclick=start;
+ document.querySelectorAll('[data-maze-dir]').forEach(b=>{const d=b.dataset.mazeDir;b.addEventListener('pointerdown',e=>{e.preventDefault();keys[d]=true});['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,()=>keys[d]=false));});
+ window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(k==='x'&&running&&shotCooldown<=0){const dirs={left:[-1,0],right:[1,0],up:[0,-1],down:[0,1]};const d=dirs[player.dir]||dirs.down;bullets.push({x:player.x+player.w/2+d[0]*22,y:player.y+player.h/2+d[1]*22,dx:d[0],dy:d[1],speed:440,life:1.45,dead:false});shotCooldown=0.38;powerPoseTimer=0.42;$('mazeStatus').textContent='✨ ¡Disparo lanzado!';e.preventDefault();}if(['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d'].includes(k)){keys[({'arrowup':'up','arrowdown':'down','arrowleft':'left','arrowright':'right'})[k]||k]=true;if(document.getElementById('level3Screen').style.display==='block')e.preventDefault();}});window.addEventListener('keyup',e=>{const k=e.key.toLowerCase();keys[({'arrowup':'up','arrowdown':'down','arrowleft':'left','arrowright':'right'})[k]||k]=false;});
+ window.startMazeLevel=start;draw();
+})();
+</script>
+<script>
+document.getElementById('backFromLevel4').addEventListener('click',()=>{document.getElementById('level4Screen').style.display='none';document.getElementById('lobitScreen').style.display='flex';window.dispatchEvent(new Event('pageshow'));});
+</script>
+
+<script>
+/* Juego Nivel 4: lanza peces a la nutria y aumenta energía y confianza. */
+(function(){
+ const canvas=document.getElementById('otterCanvas'); if(!canvas)return;
+ const ctx=canvas.getContext('2d'); const W=canvas.width,H=canvas.height;
+ const doctor=new Image(),otter=new Image();doctor.src='https://i.ibb.co/nN9KRtdF/doctor-con-peces.png';otter.src='https://i.ibb.co/sv61KnXW/nutria-en-rio.png';
+ const $=id=>document.getElementById(id);let running=false,raf=0,last=0,remaining=65,elapsed=0,hits=0,energy=0,trust=0,fish=[],particles=[],otterX=660,otterY=425,otterVisible=true,submergeTimer=0,nextSubmerge=2.2,throwCooldown=0,message='¡Apunta y lanza peces!';
+ function reset(){cancelAnimationFrame(raf);running=false;remaining=65;elapsed=0;hits=0;energy=0;trust=0;fish=[];particles=[];otterX=660;otterY=425;otterVisible=true;submergeTimer=0;nextSubmerge=2.2;throwCooldown=0;updateHud();draw(0);$('otterOverlay').classList.remove('hidden');$('otterOverlayTitle').textContent='🌿 La última habitante del zoológico';$('otterOverlayText').textContent='Hace años, este zoológico cerró sus puertas. Las jaulas quedaron vacías, los letreros se oxidaron y la maleza cubrió los caminos. Pero nadie se dio cuenta de que una pequeña nutria seguía viviendo en el viejo estanque. Aliméntala para recuperar su energía y ganarte su confianza.';$('otterStartButton').textContent='▶ COMENZAR A ALIMENTAR';}
+ function updateHud(){$('otterEnergyText').textContent=energy+'%';$('otterTrustText').textContent=trust+'%';$('otterEnergyBar').style.width=energy+'%';$('otterTrustBar').style.width=trust+'%';$('otterHits').textContent=hits+'/12';$('otterTimer').textContent=String(Math.floor(remaining/60)).padStart(2,'0')+':'+String(Math.floor(remaining%60)).padStart(2,'0');}
+ function drawBackground(){
+   // Cielo gris verdoso: el zoológico lleva años cerrado y la naturaleza está recuperando el lugar.
+   let sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#6f8c80');sky.addColorStop(.38,'#a9b7a0');sky.addColorStop(1,'#d0c6a0');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+   // Siluetas de árboles crecidos alrededor del recinto.
+   for(let i=0;i<11;i++){let x=i*104-25,base=285+(i%3)*15;ctx.fillStyle=i%2?'#425d49':'#526b50';ctx.fillRect(x,70,18,base-70);ctx.fillStyle=i%2?'#385b46':'#45664a';ctx.beginPath();ctx.arc(x+8,90+(i%4)*20,47+(i%3)*9,0,Math.PI*2);ctx.arc(x-12,132+(i%3)*18,37,0,Math.PI*2);ctx.arc(x+31,145+(i%4)*12,42,0,Math.PI*2);ctx.fill();}
+   // Antiguo pabellón de entrada y letrero del zoológico.
+   ctx.fillStyle='#6c7563';ctx.fillRect(302,65,365,116);ctx.fillStyle='#4e5b4d';ctx.beginPath();ctx.moveTo(282,70);ctx.lineTo(484,18);ctx.lineTo(688,70);ctx.closePath();ctx.fill();
+   ctx.fillStyle='#9a987a';ctx.fillRect(323,82,322,82);ctx.strokeStyle='#4c5547';ctx.lineWidth=5;ctx.strokeRect(323,82,322,82);
+   ctx.fillStyle='#263e35';ctx.textAlign='center';ctx.font='900 22px system-ui';ctx.fillText('ZOOLÓGICO ZOOTÓPOLIS',484,111);ctx.font='900 18px system-ui';ctx.fillStyle='#9a4737';ctx.fillText('CERRADO · NO HAY PERSONAL',484,139);
+   // Pintura desconchada y grietas en el letrero.
+   ctx.strokeStyle='#d0c8a5';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(355,91);ctx.lineTo(367,104);ctx.lineTo(360,119);ctx.moveTo(595,120);ctx.lineTo(605,132);ctx.lineTo(600,151);ctx.stroke();
+   // Taquilla vieja a la izquierda, parcialmente tragada por las plantas.
+   ctx.fillStyle='#777b68';ctx.fillRect(28,180,135,110);ctx.fillStyle='#4e5b4e';ctx.beginPath();ctx.moveTo(18,183);ctx.lineTo(92,145);ctx.lineTo(174,183);ctx.closePath();ctx.fill();ctx.fillStyle='#283e37';ctx.fillRect(52,205,86,43);ctx.strokeStyle='#9d7651';ctx.lineWidth=4;ctx.strokeRect(52,205,86,43);ctx.fillStyle='#c0b48b';ctx.font='bold 12px system-ui';ctx.textAlign='center';ctx.fillText('TAQUILLA',95,223);ctx.fillText('SIN SERVICIO',95,239);
+   // Camino agrietado hacia el estanque.
+   ctx.fillStyle='#8b8b70';ctx.beginPath();ctx.moveTo(180,170);ctx.lineTo(780,170);ctx.lineTo(650,410);ctx.lineTo(300,410);ctx.closePath();ctx.fill();ctx.strokeStyle='#555f4e';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(366,210);ctx.lineTo(350,255);ctx.lineTo(370,278);ctx.lineTo(342,315);ctx.moveTo(610,205);ctx.lineTo(590,239);ctx.lineTo(606,262);ctx.lineTo(580,296);ctx.stroke();
+   // Reja oxidada, rota y torcida a ambos lados del estanque.
+   for(let side=0;side<2;side++){let x0=side?750:190,x1=side?955:305;ctx.strokeStyle='#654f3d';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x0,185);ctx.lineTo(x1,250);ctx.stroke();ctx.strokeStyle='#9b6846';ctx.lineWidth=3;for(let i=0;i<6;i++){let x=x0+(x1-x0)*i/5;ctx.beginPath();ctx.moveTo(x,180+(side?i*12:i*7));ctx.lineTo(x+(side?-6:5),265+(side?i*4:i*2));ctx.stroke();}ctx.strokeStyle='#435346';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(x0,221);ctx.lineTo(x1,274);ctx.stroke();}
+   // Estanque oscuro con orilla de cemento deteriorada.
+   ctx.fillStyle='#575f4b';ctx.beginPath();ctx.moveTo(0,300);ctx.quadraticCurveTo(180,265,330,312);ctx.quadraticCurveTo(510,360,690,304);ctx.quadraticCurveTo(840,268,960,312);ctx.lineTo(960,540);ctx.lineTo(0,540);ctx.closePath();ctx.fill();
+   ctx.fillStyle='#426f69';ctx.beginPath();ctx.moveTo(0,326);ctx.quadraticCurveTo(180,291,330,335);ctx.quadraticCurveTo(510,380,690,326);ctx.quadraticCurveTo(840,293,960,330);ctx.lineTo(960,540);ctx.lineTo(0,540);ctx.closePath();ctx.fill();
+   let water=ctx.createLinearGradient(0,320,0,H);water.addColorStop(0,'#477f79');water.addColorStop(.55,'#285e62');water.addColorStop(1,'#183f4b');ctx.fillStyle=water;ctx.beginPath();ctx.moveTo(0,343);ctx.quadraticCurveTo(170,308,330,350);ctx.quadraticCurveTo(515,390,690,344);ctx.quadraticCurveTo(840,309,960,347);ctx.lineTo(960,540);ctx.lineTo(0,540);ctx.closePath();ctx.fill();
+   // Anillo de cemento quebrado y manchas de humedad.
+   ctx.strokeStyle='#a4a18a';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(0,342);ctx.quadraticCurveTo(170,307,330,350);ctx.quadraticCurveTo(515,390,690,344);ctx.quadraticCurveTo(840,309,960,347);ctx.stroke();ctx.strokeStyle='#535e50';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(105,333);ctx.lineTo(119,350);ctx.lineTo(111,364);ctx.moveTo(770,333);ctx.lineTo(758,348);ctx.lineTo(772,361);ctx.stroke();
+   // Maleza alta entre las baldosas, raíces y juncos que invaden el lugar.
+   for(let i=0;i<25;i++){let x=(i*43+9)%W,y=292+(i%5)*42;ctx.strokeStyle=i%2?'#395d3e':'#647a42';ctx.lineWidth=3+(i%2);ctx.beginPath();ctx.moveTo(x,y+35);ctx.quadraticCurveTo(x-10,y+10,x-7,y-5);ctx.moveTo(x,y+35);ctx.quadraticCurveTo(x+12,y+13,x+10,y-2);ctx.moveTo(x,y+35);ctx.quadraticCurveTo(x+1,y+8,x+2,y-10);ctx.stroke();}
+   // Pequeños restos olvidados en la orilla.
+   ctx.save();ctx.translate(246,382);ctx.rotate(-.22);ctx.fillStyle='#a2a18b';ctx.fillRect(0,0,18,11);ctx.strokeStyle='#4b5a4d';ctx.strokeRect(0,0,18,11);ctx.restore();ctx.fillStyle='#b3a07a';ctx.beginPath();ctx.arc(715,405,8,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#5b654f';ctx.lineWidth=2;ctx.beginPath();ctx.arc(715,405,5,0,Math.PI*2);ctx.stroke();
+   // Ondas apagadas del estanque.
+   for(let i=0;i<16;i++){const x=(i*71+elapsed*12)%W,y=365+(i*31)%150;ctx.strokeStyle='rgba(213,226,192,.18)';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(x,y,15+(i%3)*9,2.5,Math.sin(elapsed+i)*.06,0,Math.PI*2);ctx.stroke();}
+   const vignette=ctx.createRadialGradient(W/2,H/2,130,W/2,H/2,610);vignette.addColorStop(0,'rgba(13,35,31,0)');vignette.addColorStop(1,'rgba(11,25,24,.36)');ctx.fillStyle=vignette;ctx.fillRect(0,0,W,H);
+ }
+ function drawDoctor(){if(doctor.complete&&doctor.naturalWidth){const h=225,w=h*doctor.naturalWidth/doctor.naturalHeight;ctx.save();ctx.shadowColor='#082b2b55';ctx.shadowBlur=12;ctx.drawImage(doctor,18,H-h+10,w,h);ctx.restore();}else{ctx.fillStyle='#e8d19b';ctx.fillRect(28,390,120,130);ctx.fillStyle='#fff';ctx.fillText('Doctor',50,455);}}
+ function drawOtter(){if(!otterVisible)return;const w=245,h=190;if(otter.complete&&otter.naturalWidth){ctx.save();ctx.globalAlpha=1;ctx.shadowColor='#082b2b44';ctx.shadowBlur=12;ctx.drawImage(otter,otterX-w/2,otterY-h/2,w,h);ctx.restore();}else{ctx.fillStyle='#79533a';ctx.beginPath();ctx.ellipse(otterX,otterY,55,34,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff';ctx.fillText('Nutria',otterX-20,otterY);}}
+ function drawFish(f){ctx.save();ctx.translate(f.x,f.y);ctx.rotate(Math.atan2(f.vy,f.vx));ctx.fillStyle='#ffb84d';ctx.strokeStyle='#8c522c';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,0,13,7,0,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.beginPath();ctx.moveTo(-10,0);ctx.lineTo(-20,-7);ctx.lineTo(-20,7);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#173f42';ctx.beginPath();ctx.arc(7,-2,1.7,0,Math.PI*2);ctx.fill();ctx.restore();}
+ function draw(){drawBackground();drawOtter();drawDoctor();fish.forEach(drawFish);particles.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;});
+   if(running){ctx.fillStyle='#103d3ee8';ctx.strokeStyle='#f0d184';ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(18,16,235,42,12);ctx.fill();ctx.stroke();ctx.fillStyle='#fff7d8';ctx.font='bold 17px system-ui';ctx.fillText(otterVisible?'¡La nutria está aquí!':'💦 ¡Se sumergió, espera!',31,43);}
+ }
+ function launch(x,y){if(!running||throwCooldown>0)return;throwCooldown=.20;const sx=150,sy=430;const tx=Number.isFinite(x)?x:(otterX),ty=Number.isFinite(y)?y:(otterY);let dx=tx-sx,dy=ty-sy,d=Math.hypot(dx,dy)||1;fish.push({x:sx,y:sy,vx:dx/d*650,vy:dy/d*650,life:1.8});}
+ function canvasPoint(e){const r=canvas.getBoundingClientRect();return {x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height};}
+ function loop(ts){if(!running)return;const dt=Math.min((ts-last)/1000,.04);last=ts;elapsed+=dt;remaining=Math.max(0,remaining-dt);throwCooldown=Math.max(0,throwCooldown-dt);
+   if(elapsed>=nextSubmerge&&submergeTimer<=0){otterVisible=false;submergeTimer=1.65+Math.random()*.45;nextSubmerge=elapsed+3.0+Math.random()*1.3;}
+   if(submergeTimer>0){submergeTimer-=dt;if(submergeTimer<=0){otterVisible=true;otterX=475+Math.random()*390;otterY=390+Math.random()*70;}}
+   if(otterVisible){otterX+=Math.sin(elapsed*2.7)*42*dt;otterY+=Math.sin(elapsed*3.8)*27*dt;otterX=Math.max(440,Math.min(900,otterX));otterY=Math.max(385,Math.min(465,otterY));}
+   for(const f of fish){f.x+=f.vx*dt;f.y+=f.vy*dt;f.life-=dt;if(otterVisible&&Math.hypot(f.x-otterX,f.y-otterY)<62){f.dead=true;hits++;energy=Math.min(100,Math.round(hits/12*100));trust=Math.min(100,Math.round(hits/12*100));for(let i=0;i<15;i++)particles.push({x:otterX+(Math.random()-.5)*70,y:otterY+(Math.random()-.5)*50,vx:(Math.random()-.5)*100,vy:-20-Math.random()*100,life:.8,color:['#ffe58a','#9bffc2','#ffffff'][i%3],r:2+Math.random()*4});message='¡Bien hecho! La nutria está recuperando energía y confianza.';updateHud();}if(f.life<=0||f.x<-30||f.x>W+30||f.y<-30||f.y>H+30)f.dead=true;}
+   fish=fish.filter(f=>!f.dead);for(const p of particles){p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;}particles=particles.filter(p=>p.life>0);
+   if(hits>=12){finish(true);return;}if(remaining<=0){finish(false);return;}updateHud();draw();raf=requestAnimationFrame(loop);
+ }
+ function finish(win){running=false;cancelAnimationFrame(raf);$('otterOverlay').classList.remove('hidden');$('otterOverlayTitle').textContent=win?'💚 ¡La nutria confía en ti!':'⏱️ ¡Se acabó el tiempo!';$('otterOverlayText').textContent=win?'¡Misión completada! Después de años de abandono, la nutria por fin recibe ayuda. Recuperó energía y vuelve a confiar en alguien. El Nivel 4 está superado.':'Alcanzaste '+hits+' de 12 peces acertados. La nutria sigue sola en el zoológico abandonado. Inténtalo de nuevo: tienes solo 65 segundos.';$('otterStartButton').textContent=win?'↻ JUGAR DE NUEVO':'↻ REINTENTAR NIVEL 4';if(win){localStorage.setItem('zootopolis_nivel4_superado_v1','true');localStorage.setItem('zootopolis_nivel5_desbloqueado_v1','true');localStorage.setItem('zootopolis_progreso_nivel5_v2','true');}draw();}
+ function start(){reset();$('otterOverlay').classList.add('hidden');running=true;last=performance.now();raf=requestAnimationFrame(loop);}
+ canvas.addEventListener('pointerdown',e=>{if(!running)return;e.preventDefault();const p=canvasPoint(e);launch(p.x,p.y);});$('otterStartButton').addEventListener('click',start);
+ $('backFromLevel4').addEventListener('click',()=>{running=false;cancelAnimationFrame(raf);$('level4Screen').style.display='none';$('lobitScreen').style.display='flex';window.dispatchEvent(new Event('pageshow'));});
+ window.startOtterLevel=reset;reset();
+})();
+</script>
+
+</body>
+</html>
+
+
+<script>
+/* Nivel 5: liberación con enemigo, defensa y retorno visual a los hábitats. */
+(function(){
+ const canvas=document.getElementById('rescue5Canvas'); if(!canvas)return; const c=canvas.getContext('2d'),W=960,H=540,$=id=>document.getElementById(id);
+ const urls={rabbitCage:'https://i.ibb.co/3yTxpj4n/conejo-enjaulado.png',catCage:'https://i.ibb.co/fRGsqqQ/gato-enjaluado.png',otterCage:'https://i.ibb.co/W9yjg4B/nutria-enjaulada.png',dogCage:'https://i.ibb.co/SD8BcwY3/perrito-en-jaula.png',rabbit:'https://i.ibb.co/1JvNY1wP/conejo-bien.png',dog:'https://i.ibb.co/MkkRd3hy/perro-pag-web.png',cat:'https://i.ibb.co/WNqNNZKj/gato-1.png',otter:'https://i.ibb.co/cSFgWCq7/nutria-feliz.png',down:'https://i.ibb.co/dwy8Yxks/malo-mirando-a-bajo.png',right:'https://i.ibb.co/0phHwkn4/malo-mirando-a-la-derecha.png',left:'https://i.ibb.co/Q3Hn8Qwv/malo-mirando-a-la-izquierda.png',up:'https://i.ibb.co/LXGM1dSC/malo-mirando-al-frente.png',doctorDown:'https://i.ibb.co/rRndZ3k8/CENTRO.png',doctorLeft:'https://i.ibb.co/7d7XYNmZ/Doctor-izquierda.png',doctorRight:'https://i.ibb.co/KRWWzs1/Doctor-derecha.png',doctorPower:'https://i.ibb.co/cS580PQF/doctor-poderes.png'};
+ const imgs={};Object.entries(urls).forEach(([k,u])=>{imgs[k]=new Image();imgs[k].src=u;});
+ const habitats={rabbit:{x:820,y:115},cat:{x:820,y:420},otter:{x:820,y:275}};
+ const cagesStart=[{id:'rabbit',x:155,y:155,src:'rabbitCage',label:'CONEJO',healthy:'rabbit',hx:habitats.rabbit.x,hy:habitats.rabbit.y},{id:'cat',x:295,y:155,src:'catCage',label:'GATO',healthy:'cat',hx:habitats.cat.x,hy:habitats.cat.y},{id:'otter',x:435,y:155,src:'otterCage',label:'NUTRIA',healthy:'otter',hx:habitats.otter.x,hy:habitats.otter.y},{id:'dog',x:155,y:355,src:'dogCage',label:'PERRITO',healthy:'dog',hx:115,hy:278}];
+ let player,enemies,bullets,enemyPowers,cages,freed,escaped,keys,running,raf,last,elapsed,time,lives,kills,hitCooldown,shootCooldown,actionFlash,completed,enemyAttackTimer,enemyPowerCycle;
+ const ENEMY_MAX_HEALTH=600;
+ function reset(){cancelAnimationFrame(raf);player={x:65,y:265,w:32,h:40,dir:'right',power:0};enemies=[{x:540,y:265,w:40,h:46,dir:'left',speed:112,active:true,stun:0,health:ENEMY_MAX_HEALTH}];bullets=[];enemyPowers=[];enemyAttackTimer=.55;enemyPowerCycle=0;cages=cagesStart.map(a=>({...a,freed:false}));freed=0;escaped=[];keys={};running=false;elapsed=0;time=150;lives=3;kills=0;hitCooldown=0;shootCooldown=0;actionFlash=0;completed=false;hud();draw();$('rescue5Overlay').classList.remove('hidden');$('rescue5Title').textContent='🔓 ¡Ningún animal se queda atrás!';$('rescue5Text').textContent='Los cuatro animalitos están encerrados en la sala del hospital. Un monstruo patrulla el lugar y quiere impedir la liberación. Acércate a cada jaula y pulsa E o ESPACIO para abrirla. Usa X para lanzar el poder del doctor y defenderte.';$('rescue5Start').textContent='▶ COMENZAR RESCATE';}
+ function hud(){$('rescue5Count').textContent=freed+'/4';$('rescue5Lives').textContent=lives;$('rescue5Kills').textContent=kills;$('rescue5Timer').textContent=String(Math.floor(time/60)).padStart(2,'0')+':'+String(Math.floor(time%60)).padStart(2,'0');let boss=enemies.find(e=>e.active);let hp=boss?Math.max(0,boss.health):0;$('rescue5BossHealthText').textContent=hp+' / '+ENEMY_MAX_HEALTH;$('rescue5BossHealthFill').style.width=(hp/ENEMY_MAX_HEALTH*100)+'%';$('rescue5BossHealth').classList.toggle('low',hp<ENEMY_MAX_HEALTH*.25);}
+ function image(key,x,y,w,h,emoji){const im=imgs[key];if(im&&im.complete&&im.naturalWidth){c.drawImage(im,x,y,w,h);}else{c.font='32px sans-serif';c.textAlign='center';c.fillText(emoji||'🐾',x+w/2,y+h/2);}}
+ function round(x,y,w,h,r,fill,stroke){c.beginPath();c.roundRect(x,y,w,h,r);c.fillStyle=fill;c.fill();if(stroke){c.strokeStyle=stroke;c.lineWidth=2;c.stroke();}}
+ function draw(){c.clearRect(0,0,W,H);
+ // Interior del hospital: piso clínico, paredes, ventanas y señalización.
+ c.fillStyle='#d8e7dc';c.fillRect(0,0,590,H);for(let y=0;y<H;y+=48)for(let x=0;x<590;x+=48){c.strokeStyle='#b7d0c4';c.lineWidth=1;c.strokeRect(x,y,48,48);}c.fillStyle='#f4f6ef';c.fillRect(0,0,590,48);c.fillStyle='#347781';c.fillRect(0,0,590,9);c.fillStyle='#2b5b62';c.font='bold 19px system-ui';c.textAlign='left';c.fillText('HOSPITAL DE ANIMALITOS',20,32);
+ // Puerta abierta hacia el exterior.
+ c.fillStyle='#8d6c4a';c.fillRect(556,208,34,125);c.fillStyle='#f0d88b';c.fillRect(562,216,22,108);c.fillStyle='#496f5a';c.fillRect(570,262,5,5);
+ // Zona exterior y tres hábitats visibles en el mismo mapa.
+ c.fillStyle='#b5d9a0';c.fillRect(590,0,370,H);for(let i=0;i<80;i++){let x=600+(i*73%350),y=(i*47%530);c.fillStyle=i%2?'#a2cc8a':'#c5e2ac';c.beginPath();c.arc(x,y,2+(i%3),0,Math.PI*2);c.fill();}
+ // sendero que conecta hospital con los hábitats
+ c.strokeStyle='#d9c79a';c.lineWidth=46;c.beginPath();c.moveTo(574,270);c.lineTo(665,270);c.lineTo(665,120);c.lineTo(820,120);c.moveTo(665,270);c.lineTo(820,270);c.moveTo(665,270);c.lineTo(665,420);c.lineTo(820,420);c.stroke();c.strokeStyle='#f0e3bf';c.lineWidth=2;c.setLineDash([8,8]);c.beginPath();c.moveTo(574,270);c.lineTo(665,270);c.lineTo(665,120);c.lineTo(820,120);c.moveTo(665,270);c.lineTo(820,270);c.moveTo(665,270);c.lineTo(665,420);c.lineTo(820,420);c.stroke();c.setLineDash([]);
+ // Pradera del conejo
+ round(748,48,190,122,18,'#86bd72','#4f8c56');for(let i=0;i<18;i++){let x=765+(i*29%155),y=65+(i*31%80);c.fillStyle=i%2?'#e8e9a5':'#fff0ce';c.beginPath();c.arc(x,y,3,0,Math.PI*2);c.fill();}c.fillStyle='#234d38';c.font='bold 13px system-ui';c.textAlign='center';c.fillText('🌿 PRADERA',842,64);
+ // Estanque para la nutria
+ c.fillStyle='#4da8bd';c.beginPath();c.ellipse(835,270,95,48,0,0,Math.PI*2);c.fill();c.strokeStyle='#b3ecf0';c.lineWidth=3;for(let i=0;i<3;i++){c.beginPath();c.ellipse(835,263+i*15,43+i*12,8,0,0,Math.PI*2);c.stroke();}c.fillStyle='#164f5d';c.font='bold 13px system-ui';c.fillText('💧 ESTANQUE',835,224);
+ // Jardín seguro para el gato
+ round(748,365,190,112,18,'#d3e4ad','#769e58');c.fillStyle='#729a51';for(let i=0;i<6;i++){let x=770+i*27;c.beginPath();c.arc(x,399+(i%2)*20,13,0,Math.PI*2);c.fill();}c.fillStyle='#34533a';c.font='bold 13px system-ui';c.fillText('🌼 JARDÍN',843,385);
+ // jaulas hospitalarias
+ cages.forEach(cg=>{if(cg.freed)return;round(cg.x-42,cg.y-48,88,104,10,'#f1f4ed','#7b9090');c.fillStyle='#b7c5c0';c.fillRect(cg.x-37,cg.y-42,78,91);image(cg.src,cg.x-30,cg.y-39,64,74,'🐾');c.strokeStyle='#5c777d';c.lineWidth=4;for(let bx=cg.x-31;bx<=cg.x+31;bx+=15){c.beginPath();c.moveTo(bx,cg.y-40);c.lineTo(bx,cg.y+31);c.stroke();}c.strokeStyle='#dce9e5';c.lineWidth=2;c.strokeRect(cg.x-37,cg.y-42,78,91);round(cg.x-43,cg.y+57,86,20,6,'#174b55','#e8cf86');c.fillStyle='#fff';c.font='bold 10px system-ui';c.textAlign='center';c.fillText(cg.label,cg.x,cg.y+71);});
+ // etiquetas de salida y los animales ya sanos que se desplazan hacia su hábitat
+ escaped.forEach(a=>{image(a.healthy,a.x-20,a.y-20,40,40,a.emoji);if(a.id==='dog'){c.fillStyle='#174b55';c.font='bold 11px system-ui';c.textAlign='center';c.fillText('CON EL DOCTOR',a.x,a.y+27);}});
+ // enemigo orientado según su dirección
+ enemies.forEach(e=>{if(!e.active)return;image(e.dir,e.x-9,e.y-12,58,62,'👾');round(e.x-4,e.y-20,50,7,4,'#381b25','#fff1c2');round(e.x-3,e.y-19,48*Math.max(0,e.health/ENEMY_MAX_HEALTH),5,3,'#e52d42');if(e.stun>0){c.strokeStyle='#9efaff';c.lineWidth=3;c.beginPath();c.arc(e.x+20,e.y+18,35,0,Math.PI*2);c.stroke();}});
+ // Poderes hostiles: orbe veloz, ráfaga triple y esfera perseguidora.
+ enemyPowers.forEach(p=>{c.save();c.shadowColor=p.color;c.shadowBlur=18;c.fillStyle=p.color;c.beginPath();c.arc(p.x,p.y,p.r||8,0,Math.PI*2);c.fill();c.strokeStyle='#fff';c.lineWidth=2;c.stroke();if(p.kind==='spread'){c.strokeStyle='#ffddff';c.beginPath();c.arc(p.x,p.y,(p.r||8)+5,0,Math.PI*2);c.stroke();}c.restore();});
+ // proyectiles de poder del doctor
+ bullets.forEach(b=>{c.save();c.shadowColor='#5ef4ff';c.shadowBlur=15;c.fillStyle='#7cf7ff';c.beginPath();c.arc(b.x,b.y,7,0,Math.PI*2);c.fill();c.strokeStyle='#fff';c.lineWidth=2;c.stroke();c.restore();});
+ const dkey=player.power>0?'doctorPower':player.dir==='left'?'doctorLeft':player.dir==='right'?'doctorRight':'doctorDown';image(dkey,player.x-9,player.y-11,51,58,'🧑‍⚕️');
+ if(freed<4&&running){let near=cages.find(a=>!a.freed&&Math.hypot(player.x+12-a.x,player.y+12-a.y)<78);if(near){round(20,478,420,42,12,'#164651eF','#edcf7e');c.fillStyle='#fff';c.font='bold 16px system-ui';c.textAlign='left';c.fillText('Pulsa E o ESPACIO para liberar: '+near.label,34,504);}else{round(20,488,275,30,9,'#164651d9','#edcf7e');c.fillStyle='#fff';c.font='bold 12px system-ui';c.fillText('Busca una jaula y acércate para abrirla',31,507);}}
+ if(actionFlash>0){c.fillStyle='#faffc4';c.font='bold 18px system-ui';c.textAlign='center';c.fillText(actionFlash>0.35?'¡JAULA ABIERTA!':'¡LIBERACIÓN!',player.x+20,player.y-22);}
+ }
+ function wallCollision(x,y,w,h){if(x<8||y<50||x+w>952||y+h>530)return true; // la puerta es el paso entre sala y exterior
+  if(x<590&&x+w>555&&!(y>202&&y+h<340))return true;return false;}
+ function recagePet(a){const cg=cages.find(x=>x.id===a.id);if(!cg||!cg.freed)return;cg.freed=false;escaped=escaped.filter(x=>x!==a);freed=Math.max(0,freed-1);actionFlash=.7;$('rescue5Text').textContent='👹 ¡El monstruo volvió a encerrar al '+cg.label.toLowerCase()+'! Acércate a su jaula y libéralo otra vez.';hud();}
+ function fireEnemyPower(e){const ox=e.x+20,oy=e.y+22,dx=player.x+16-ox,dy=player.y+20-oy,d=Math.hypot(dx,dy)||1;enemyPowerCycle=(enemyPowerCycle+1)%3;
+   if(enemyPowerCycle===0){enemyPowers.push({x:ox,y:oy,dx:dx/d,dy:dy/d,speed:245,life:3.1,damage:1,kind:'orb',color:'#ff5a48',r:9});}
+   else if(enemyPowerCycle===1){const base=Math.atan2(dy,dx);[-.25,0,.25].forEach(a=>enemyPowers.push({x:ox,y:oy,dx:Math.cos(base+a),dy:Math.sin(base+a),speed:205,life:2.7,damage:1,kind:'spread',color:'#d36bff',r:7}));}
+   else {enemyPowers.push({x:ox,y:oy,dx:dx/d,dy:dy/d,speed:155,life:3.8,damage:1,kind:'seeker',color:'#ffbd45',r:10,seeking:true});}
+ }
+ function freeNearest(){if(!running)return;let cg=cages.find(a=>!a.freed&&Math.hypot(player.x+16-a.x,player.y+18-a.y)<83);if(!cg)return;cg.freed=true;freed++;actionFlash=.7;let healthy=cg.healthy;escaped.push({id:cg.id,healthy,emoji:cg.id==='rabbit'?'🐰':cg.id==='cat'?'🐱':cg.id==='otter'?'🦦':'🐶',x:player.x+25,y:player.y+20,tx:cg.hx,ty:cg.hy,speed:cg.id==='dog'?0:45});if(cg.id==='dog')escaped[escaped.length-1].x=player.x+38;hud();if(freed===4){$('rescue5Text').textContent='¡Los cuatro animales están libres! El conejo vuelve a la pradera, la nutria al estanque y el gato al jardín. El perrito, ya saludable, se queda con el doctor. ¡Misión final completada!';}}
+ function shoot(){if(!running||shootCooldown>0)return;shootCooldown=.34;player.power=.22;let dx=player.dir==='left'?-1:player.dir==='right'?1:0,dy=player.dir==='up'?-1:player.dir==='down'?1:0;if(!dx&&!dy)dx=1;bullets.push({x:player.x+16,y:player.y+19,dx,dy,speed:440,life:1.4});}
+ function finish(win){running=false;cancelAnimationFrame(raf);completed=win;$('rescue5Overlay').classList.remove('hidden');$('rescue5Title').textContent=win?'🏆 ¡Zootópolis está a salvo!':'👾 ¡El rescate continúa pendiente!';$('rescue5Text').textContent=win?'Liberaste a los cuatro pacientes. El conejo llegó a la pradera, la nutria al estanque y el gato al jardín; el perrito se queda junto al doctor, sano y protegido. ¡Has completado el nivel final!':'Liberaste '+freed+' de 4 animalitos. El monstruo logró detener el rescate por ahora. Vuelve a intentarlo: abre las jaulas, esquiva al enemigo y usa X para defenderte.';$('rescue5Start').textContent=win?'↻ JUGAR DE NUEVO':'↻ REINTENTAR NIVEL 5';if(win){localStorage.setItem('zootopolis_nivel5_superado_v1','true');localStorage.setItem('zootopolis_juego_completado_v1','true');}draw();}
+ function loop(now){if(!running)return;let dt=Math.min((now-last)/1000,.05);last=now;elapsed+=dt;time=Math.max(0,time-dt);hitCooldown=Math.max(0,hitCooldown-dt);shootCooldown=Math.max(0,shootCooldown-dt);player.power=Math.max(0,player.power-dt);actionFlash=Math.max(0,actionFlash-dt);if(time<=0){hud();finish(false);return;}
+ let dx=0,dy=0;if(keys.left||keys.a)dx--;if(keys.right||keys.d)dx++;if(keys.up||keys.w)dy--;if(keys.down||keys.s)dy++;if(dx||dy){let m=Math.hypot(dx,dy);dx/=m;dy/=m;player.dir=Math.abs(dx)>Math.abs(dy)?(dx<0?'left':'right'):(dy<0?'up':'down');let nx=player.x+dx*190*dt,ny=player.y+dy*190*dt;if(!wallCollision(nx,player.y,player.w,player.h))player.x=nx;if(!wallCollision(player.x,ny,player.w,player.h))player.y=ny;}
+ for(let b of bullets){b.x+=b.dx*b.speed*dt;b.y+=b.dy*b.speed*dt;b.life-=dt;if(b.life<=0||b.x<0||b.x>W||b.y<0||b.y>H){b.dead=true;continue;}for(let e of enemies){if(e.active&&Math.hypot(b.x-(e.x+20),b.y-(e.y+20))<35){e.health-=12;b.dead=true;if(e.health<=0){e.active=false;e.dead=true;kills++;}break;}}}bullets=bullets.filter(b=>!b.dead);enemies=enemies.filter(e=>!e.dead);
+ if(enemies.length===0&&running&&elapsed>7){let edge=[{x:520,y:100},{x:520,y:410},{x:430,y:275},{x:565,y:370}][Math.floor(Math.random()*4)];enemies.push({x:edge.x,y:edge.y,w:40,h:46,dir:'down',speed:112+Math.random()*16,active:true,stun:0,health:ENEMY_MAX_HEALTH});enemyAttackTimer=.5;}
+ for(let e of enemies){if(!e.active)continue;let tx=player.x,ty=player.y,ddx=tx-e.x,ddy=ty-e.y,dist=Math.hypot(ddx,ddy)||1;e.dir=Math.abs(ddx)>Math.abs(ddy)?(ddx<0?'left':'right'):(ddy<0?'up':'down');if(e.stun>0)e.stun-=dt;else{let nx=e.x+ddx/dist*e.speed*dt,ny=e.y+ddy/dist*e.speed*dt;if(!wallCollision(nx,e.y,38,42))e.x=nx;if(!wallCollision(e.x,ny,38,42))e.y=ny;}
+   enemyAttackTimer-=dt;if(enemyAttackTimer<=0){fireEnemyPower(e);enemyAttackTimer=Math.max(.62,1.05-elapsed*.0025);}
+   if(hitCooldown<=0&&Math.hypot(player.x+16-(e.x+20),player.y+20-(e.y+20))<39){lives--;hitCooldown=1.15;player.x=65;player.y=265;hud();if(lives<=0){finish(false);return;}}
+ }
+ for(let p of enemyPowers){p.life-=dt;if(p.kind==='seeker'){let tx=player.x+16-p.x,ty=player.y+20-p.y,d=Math.hypot(tx,ty)||1;p.dx=p.dx*.94+(tx/d)*.06;p.dy=p.dy*.94+(ty/d)*.06;let n=Math.hypot(p.dx,p.dy)||1;p.dx/=n;p.dy/=n;}p.x+=p.dx*p.speed*dt;p.y+=p.dy*p.speed*dt;if(p.life<=0||p.x<0||p.x>W||p.y<0||p.y>H){p.dead=true;continue;}
+   if(hitCooldown<=0&&Math.hypot(p.x-(player.x+16),p.y-(player.y+20))<24){p.dead=true;lives--;hitCooldown=1.15;hud();if(lives<=0){finish(false);return;}continue;}
+ }
+ enemyPowers=enemyPowers.filter(p=>!p.dead);
+ // Si el monstruo alcanza una mascota liberada, la vuelve a encerrar.
+ for(let e of enemies){if(!e.active)continue;for(let a of [...escaped]){if(Math.hypot((e.x+20)-a.x,(e.y+20)-a.y)<34){recagePet(a);e.stun=.12;break;}}}
+ for(let a of escaped){if(a.id==='dog'){a.x=player.x+36;a.y=player.y+25;a.speed=0;continue;}if(a.speed>0){let vx=a.tx-a.x,vy=a.ty-a.y,d=Math.hypot(vx,vy);if(d<5){a.x=a.tx;a.y=a.ty;a.speed=0;}else{a.x+=vx/d*Math.min(d,a.speed*dt);a.y+=vy/d*Math.min(d,a.speed*dt);}}}
+ if(freed===4&&escaped.every(a=>a.speed===0)&&!completed){hud();finish(true);return;}hud();draw();raf=requestAnimationFrame(loop);}
+ function start(){reset();$('rescue5Overlay').classList.add('hidden');running=true;last=performance.now();raf=requestAnimationFrame(loop);}
+ function keydown(e){if(!running)return;let k=e.key.toLowerCase();if(['arrowup','arrowdown','arrowleft','arrowright',' ','x'].includes(k))e.preventDefault();if(k==='arrowup')k='up';if(k==='arrowdown')k='down';if(k==='arrowleft')k='left';if(k==='arrowright')k='right';if(k===' ')freeNearest();else if(k==='e')freeNearest();else if(k==='x')shoot();else keys[k]=true;}
+ function keyup(e){let k=e.key.toLowerCase();if(k==='arrowup')k='up';if(k==='arrowdown')k='down';if(k==='arrowleft')k='left';if(k==='arrowright')k='right';keys[k]=false;}
+ window.addEventListener('keydown',keydown);window.addEventListener('keyup',keyup);$('rescue5Start').addEventListener('click',start);window.startRescueLevel5=()=>{reset();};
+ document.querySelectorAll('[data-rescue5-dir]').forEach(btn=>{const k=btn.dataset.rescue5Dir;btn.addEventListener('pointerdown',e=>{e.preventDefault();keys[k]=true;});['pointerup','pointercancel','pointerleave'].forEach(ev=>btn.addEventListener(ev,()=>keys[k]=false));});document.querySelectorAll('[data-rescue5-action]').forEach(btn=>btn.addEventListener('click',()=>btn.dataset.rescue5Action==='free'?freeNearest():shoot()));
+ $('backFromLevel5').addEventListener('click',()=>{running=false;cancelAnimationFrame(raf);$('level5Screen').style.display='none';$('lobitScreen').style.display='flex';window.dispatchEvent(new Event('pageshow'));window.scrollTo(0,0);});
+ reset();
+})();
+</script>
